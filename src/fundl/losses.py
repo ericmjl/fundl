@@ -12,6 +12,10 @@ def mse_loss(y, y_hat):
     return np.mean(np.power(y - y_hat, 2), axis=-1)
 
 def kl_divergence(z_mean, z_log_var, mean=True):
+    """
+    KL divergence away from a Normal(0, 1) distribution, a.k.a.
+    unit Gaussian.
+    """
     kl = 1 + z_log_var - np.power(z_mean, 2) - np.exp(z_log_var)
     kl *= -0.5
 
