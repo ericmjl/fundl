@@ -6,7 +6,7 @@ def dense(params, x, nonlin=None):
 
     Assumes that params is a dictionary with 'w' and 'b' as keys.
     """
-    a = np.dot(x, params['w']) + params['b']
+    a = np.dot(x, params["w"]) + params["b"]
     if nonlin:
         a = nonlin(a)
     return a
@@ -18,4 +18,3 @@ def dropout(p, x):
     """
     mask = np.random.binomial(n=1, p=p, size=x.shape[1])
     return x * mask
-

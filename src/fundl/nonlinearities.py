@@ -1,5 +1,6 @@
 import autograd.numpy as np
 
+
 def sigmoid(x):
     return 0.5 * np.tanh(x) + 0.5
 
