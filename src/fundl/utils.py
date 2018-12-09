@@ -30,3 +30,9 @@ def add_gru_params(params, name, input_dim, output_dim):
     params["name"]["b_h"] = normal(size=ashape, **p)
 
     return params
+
+
+def safe_log(x, eps=1e-10):
+    """A logarithmic transform that is numerically safe."""
+    return np.log(x + eps)
+
