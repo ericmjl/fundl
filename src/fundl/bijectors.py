@@ -1,3 +1,10 @@
+import autograd.numpy as np
+from autograd import elementwise_grad as egrad
+from .utils import safe_log
+
+dtanh = egrad(np.tanh)
+
+
 def planar_flow(params, z):
     """
     Transforms z using planar transformations.

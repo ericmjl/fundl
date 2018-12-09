@@ -1,3 +1,6 @@
+import autograd.numpy as np
+
+
 def dense(params, x, nonlin=None):
     """
     "dense" layers are just affine shifts + nonlinearities.

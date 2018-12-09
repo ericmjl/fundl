@@ -1,3 +1,7 @@
+import autograd.numpy as np
+from ..nonlinearities import sigmoid
+
+
 def gru(params: dict, feats: np.array):
     """
     gated recurrent unit layer.
