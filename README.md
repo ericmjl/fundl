@@ -2,7 +2,7 @@
 
 A totally unserious, pedagogical, functional-oriented deep learning library built on top of autograd.
 
-You have been forewarned: this is a package that is designed to be educational. **Do not use it in production!**
+You have been forewarned: this is a package that is designed to be educational, filled with experiments. **Do not use it in production!** You can, however, use it for a better understanding of how the internals of deep learning work.
 
 ## why this exists
 
