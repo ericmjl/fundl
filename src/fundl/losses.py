@@ -77,4 +77,4 @@ def planarflow_vae_loss(flat_params, unflattener, model, encoder, K, x, y):
     # Sum of log-det-jacobians
     ldj_loss = np.sum(log_jacobians)
 
-    return vaekoss + ldj_loss
+    return vaeloss + ldj_loss
