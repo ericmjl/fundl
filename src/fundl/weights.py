@@ -1,17 +1,42 @@
+from autograd.numpy.random import normal
+
+# We standardize all weights to be initialized as a random draw with mean 0,
+# scale 0.1
+p = dict(loc=0, scale=0.1)
+
+
 def add_dense_params(params, name, input_dim, output_dim):
-    mu = 0
-    sd = 0.1
     params[name] = dict()
-    params[name]["w"] = normal(mu, sd, size=(input_dim, output_dim))
-    params[name]["b"] = normal(mu, sd, size=(output_dim))
+    params[name]["w"] = normal(size=(input_dim, output_dim), **p)
+    params[name]["b"] = normal(size=(output_dim), **p)
+    return params
+
+
+def add_gru_params(params, name, input_dim, output_dim):
+    mshape = (n_input, n_output)  # matrix shape
+    ashape = (n_output,)  # array shape
+
+    params[name] = dict()
+    params[name]["W_z"] = normal(size=mshape, **p)
+    params[name]["U_z"] = normal(size=mshape, **p)
+    params[name]["b_z"] = normal(size=ashape, **p)
+
+    params[name]["W_r"] = normal(size=mshape, **p)
+    params[name]["U_r"] = normal(size=(n_output, n_output), **p)
+    params[name]["b_r"] = normal(size=ashape, **p)
+
+    params[name]["W_h"] = normal(size=mshape, **p)
+    params[name]["U_h"] = normal(size=(n_output, n_output), **p)
+    params[name]["b_h"] = normal(size=ashape, **p)
+
     return params
 
 
 def add_planar_flow_params(params, name, dim):
     params[name] = dict()
-    params[name]["w"] = normal(0, 1, size=(dim, 1))
-    params[name]["b"] = normal(0, 1)
-    params[name]["u"] = normal(0, 1, size=(dim, 1))
+    params[name]["w"] = normal(size=(dim, 1), **p)
+    params[name]["b"] = normal(**p)
+    params[name]["u"] = normal(size=(dim, 1), **p)
     return params
 
 
