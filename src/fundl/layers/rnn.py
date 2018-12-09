@@ -8,10 +8,14 @@ def gru(params: dict, feats: np.array):
     h_t = np.ones(params["W_z"].shape[1])
     for i, feat in enumerate(feats):
         z_t = sigmoid(
-            np.dot(feat, params["W_z"]) + np.dot(feat, params["U_z"]) + params["b_z"]
+            np.dot(feat, params["W_z"])
+            + np.dot(feat, params["U_z"])
+            + params["b_z"]
         )
         r_t = sigmoid(
-            np.dot(feat, params["W_r"]) + np.dot(params["U_r"], h_t) + params["b_r"]
+            np.dot(feat, params["W_r"])
+            + np.dot(params["U_r"], h_t)
+            + params["b_r"]
         )
         h_t = z_t * h_t + (1 - z_t) * np.tanh(
             np.dot(feat, params["W_h"])
