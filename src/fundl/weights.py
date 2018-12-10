@@ -1,8 +1,9 @@
-from autograd.numpy.random import normal
+from jax.random import normal, PRNGKey
 
+key = PRNGKey(42)
 # We standardize all weights to be initialized as a random draw with mean 0,
 # scale 0.1
-p = dict(loc=0, scale=0.1)
+p = dict(loc=0, scale=0.1, key=key)
 
 
 def add_dense_params(params, name, input_dim, output_dim):

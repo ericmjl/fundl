@@ -16,3 +16,7 @@ dependencies:
 - pycodestyle
 - mypy
 - pytest
+- pip:
+  - jax
+  - jaxlib
+  - autograd

@@ -1,4 +1,4 @@
-import autograd.numpy as np
+import jax.numpy as np
 
 
 def cross_entropy_loss(y, y_hat, mean=True):

@@ -1,5 +1,5 @@
 from ..bijectors import planar_flow, planar_flow_log_det_jacobian
-import autograd.numpy as np
+import jax.numpy as np
 
 
 def K_planar_flows(params, z, K):

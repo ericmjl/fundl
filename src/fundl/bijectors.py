@@ -1,8 +1,8 @@
-import autograd.numpy as np
-from autograd import elementwise_grad as egrad
+import jax.numpy as np
+from jax import grad
 from .utils import safe_log
 
-dtanh = egrad(np.tanh)
+dtanh = grad(np.tanh)
 
 
 def planar_flow(params, z):

@@ -1,4 +1,4 @@
-import autograd.numpy as np
+import jax.numpy as np
 from ..nonlinearities import sigmoid
 
 
