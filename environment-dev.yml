@@ -16,6 +16,7 @@ dependencies:
 - pycodestyle
 - mypy
 - pytest
+- pylint
 - pip:
   - jax
   - jaxlib
