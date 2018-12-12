@@ -4,8 +4,8 @@ Variational autoencoder written entirely using fundl.
 
 from fundl.layers import dense
 from fundl.nonlinearities import sigmoid, tanh
-import autograd.numpy as np
-from autograd.numpy.random import normal
+import jax.numpy as np
+from jax.random import normal
 
 
 # First, we define the encoder, sampler, and decoder.
