@@ -67,7 +67,7 @@ def planarflow_vae_loss(flat_params, unflattener, model, encoder, K, x, y):
     :param x, y: inputs.
     """
     vaeloss = vae_loss(
-        flat_params, unflattener, model, encoder, x, y, l2_loss=True
+        flat_params, unflattener, model, encoder, x, y, l2=True
     )
 
     z_mean, z_log_var = encoder(params, x)
