@@ -55,7 +55,7 @@ def vae_loss(flat_params, unflattener, model, encoder, x, y, model_kwargs, l2=Tr
     return -ce_loss + kl_loss + l2_loss
 
 
-def planarflow_vae_loss(flat_params, unflattener, model, encoder, K, x, y):
+def planarflow_vae_loss(flat_params, unflattener, model, encoder, x, y, **kwargs):
     """
     Loss function for normalizing flow VAEs.
 
@@ -69,10 +69,18 @@ def planarflow_vae_loss(flat_params, unflattener, model, encoder, K, x, y):
     :param K: A list of planar flow layer names.
     :param x, y: inputs.
     """
+    K = kwargs.pop('K')
+    model_kwargs = dict()
+    model_kwargs['K'] = K
+
     vaeloss = vae_loss(
-        flat_params, unflattener, model, encoder, x, y, l2=True
+        flat_params, unflattener, model, encoder, model_kwargs, x, y, l2=True
     )
 
+    params = unflattener(flat_params)
+
+    sampler = kwargs.pop('sampler')
+    K_planar_flows = kwargs.pop("K_planar_flows")
     z_mean, z_log_var = encoder(params, x)
     z = sampler(z_mean, z_log_var)
     z, log_jacobians = K_planar_flows(params, z, K)
