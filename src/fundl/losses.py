@@ -55,7 +55,7 @@ def vae_loss(flat_params, unflattener, model, encoder, x, y, model_kwargs, l2=Tr
     return -ce_loss + kl_loss + l2_loss
 
 
-def planarflow_vae_loss(flat_params, unflattener, model, encoder, x, y, **kwargs):
+def planarflow_vae_loss(flat_params, unflattener, model, encoder, x, y, kwargs):
     """
     Loss function for normalizing flow VAEs.
 
