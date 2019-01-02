@@ -33,10 +33,13 @@ def ae_loss(flat_params, unflattener, model, x, y):
     return -np.sum(cross_entropy_loss(y, y_hat))
 
 
-def vae_loss(flat_params, unflattener, model, encoder, x, y, l2=True):
+def vae_loss(flat_params, unflattener, model, encoder, x, y, model_kwargs, l2=True):
+    """
+    Variational autoencoder loss.
+    """
     # Make predictions
     params = unflattener(flat_params)
-    y_hat = model(params, x)
+    y_hat = model(params, x, **model_kwargs)
     z_mean, z_log_var = encoder(params, x)
 
     # CE-loss
