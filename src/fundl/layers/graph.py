@@ -17,7 +17,18 @@ def mpnn(params, As, Fs, nonlin=identity):
     outputs = []
     for a, f in zip(As, Fs):
         f = np.dot(a, f)
-        f = np.dot(f, params["w"]) + params["b"]
-        f = nonlin(f)
+        f = nonlin(np.dot(f, params["w"]) + params["b"])
         outputs.append(f)
+    return outputs
+
+
+def gather(Fs):
+    """
+    graph gathering layer
+
+    sums up all of the node features for a single graph.
+    """
+    outputs = []
+    for f in Fs:
+        outputs.append(f.sum(axis=0))
     return outputs
