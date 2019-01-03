@@ -10,11 +10,12 @@ from jax.random import normal
 
 # First, we define the encoder, sampler, and decoder.
 def encoder(params, x):
-    a = dense(params['enc1'], x, nonlin=tanh)
-    a = dense(params['enc2'], a, nonlin=tanh)
-    z_mean = dense(params['mean'], a)
-    z_log_var = dense(params['logvar'], a)
+    a = dense(params["enc1"], x, nonlin=tanh)
+    a = dense(params["enc2"], a, nonlin=tanh)
+    z_mean = dense(params["mean"], a)
+    z_log_var = dense(params["logvar"], a)
     return z_mean, z_log_var
+
 
 def sampler(z_mean, z_log_var):
     """
@@ -28,9 +29,9 @@ def sampler(z_mean, z_log_var):
 
 
 def decoder(params, x):
-    a = dense(params['dec1'], x, nonlin=tanh)
-    a = dense(params['dec2'], a, nonlin=tanh)
-    output = dense(params['dec3'], a, nonlin=sigmoid)
+    a = dense(params["dec1"], x, nonlin=tanh)
+    a = dense(params["dec2"], a, nonlin=tanh)
+    output = dense(params["dec3"], a, nonlin=sigmoid)
     return output
 
 
@@ -60,4 +61,6 @@ def vae_loss(flat_params, unflattener, model, x, y):
     z_mean, z_log_var = encoder(params, x)
 
     # Loss is sum of cross-entropy loss and KL loss.
-    return np.mean(cross_entropy_loss(y, y_hat) + kl_divergence(z_mean, z_log_var))
+    return np.mean(
+        cross_entropy_loss(y, y_hat) + kl_divergence(z_mean, z_log_var)
+    )

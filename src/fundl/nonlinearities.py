@@ -11,3 +11,7 @@ def relu(x):
 
 def tanh(x):
     return np.tanh(x)
+
+
+def identity(x):
+    return x
