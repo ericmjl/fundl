@@ -31,4 +31,4 @@ def gather(Fs):
     outputs = []
     for f in Fs:
         outputs.append(f.sum(axis=0))
-    return outputs
+    return np.vstack(outputs)

@@ -1,15 +1,12 @@
-from jax.random import normal, PRNGKey
+from jax.random import normal, PRNGKey, split
 
 key = PRNGKey(42)
-# We standardize all weights to be initialized as a random draw with mean 0,
-# scale 0.1
-p = dict(loc=0, scale=0.1, key=key)
 
 
 def add_dense_params(params, name, input_dim, output_dim):
     params[name] = dict()
-    params[name]["w"] = normal(size=(input_dim, output_dim), **p)
-    params[name]["b"] = normal(size=(output_dim), **p)
+    params[name]["w"] = normal(split(key)[0], (input_dim, output_dim))
+    params[name]["b"] = normal(split(key)[0], (output_dim,))
     return params
 
 
@@ -18,26 +15,26 @@ def add_gru_params(params, name, input_dim, output_dim):
     ashape = (n_output,)  # array shape
 
     params[name] = dict()
-    params[name]["W_z"] = normal(size=mshape, **p)
-    params[name]["U_z"] = normal(size=mshape, **p)
-    params[name]["b_z"] = normal(size=ashape, **p)
+    params[name]["W_z"] = normal(key, mshape)
+    params[name]["U_z"] = normal(key, mshape)
+    params[name]["b_z"] = normal(key, ashape)
 
-    params[name]["W_r"] = normal(size=mshape, **p)
-    params[name]["U_r"] = normal(size=(n_output, n_output), **p)
-    params[name]["b_r"] = normal(size=ashape, **p)
+    params[name]["W_r"] = normal(key, mshape)
+    params[name]["U_r"] = normal(key, (n_output, n_output))
+    params[name]["b_r"] = normal(key, ashape)
 
-    params[name]["W_h"] = normal(size=mshape, **p)
-    params[name]["U_h"] = normal(size=(n_output, n_output), **p)
-    params[name]["b_h"] = normal(size=ashape, **p)
+    params[name]["W_h"] = normal(key, mshape)
+    params[name]["U_h"] = normal(key, (n_output, n_output))
+    params[name]["b_h"] = normal(key, ashape)
 
     return params
 
 
 def add_planar_flow_params(params, name, dim):
     params[name] = dict()
-    params[name]["w"] = normal(size=(dim, 1), **p)
-    params[name]["b"] = normal(**p)
-    params[name]["u"] = normal(size=(dim, 1), **p)
+    params[name]["w"] = normal(key, (dim, 1))
+    params[name]["b"] = normal(key,)
+    params[name]["u"] = normal(key, (dim, 1))
     return params
 
 
