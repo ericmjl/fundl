@@ -15,26 +15,26 @@ def add_gru_params(params, name, input_dim, output_dim):
     ashape = (n_output,)  # array shape
 
     params[name] = dict()
-    params[name]["W_z"] = normal(key, mshape)
-    params[name]["U_z"] = normal(key, mshape)
-    params[name]["b_z"] = normal(key, ashape)
+    params[name]["W_z"] = normal(split(key)[0], mshape)
+    params[name]["U_z"] = normal(split(key)[0], mshape)
+    params[name]["b_z"] = normal(split(key)[0], ashape)
 
-    params[name]["W_r"] = normal(key, mshape)
-    params[name]["U_r"] = normal(key, (n_output, n_output))
-    params[name]["b_r"] = normal(key, ashape)
+    params[name]["W_r"] = normal(split(key)[0], mshape)
+    params[name]["U_r"] = normal(split(key)[0], (n_output, n_output))
+    params[name]["b_r"] = normal(split(key)[0], ashape)
 
-    params[name]["W_h"] = normal(key, mshape)
-    params[name]["U_h"] = normal(key, (n_output, n_output))
-    params[name]["b_h"] = normal(key, ashape)
+    params[name]["W_h"] = normal(split(key)[0], mshape)
+    params[name]["U_h"] = normal(split(key)[0], (n_output, n_output))
+    params[name]["b_h"] = normal(split(key)[0], ashape)
 
     return params
 
 
 def add_planar_flow_params(params, name, dim):
     params[name] = dict()
-    params[name]["w"] = normal(key, (dim, 1))
-    params[name]["b"] = normal(key,)
-    params[name]["u"] = normal(key, (dim, 1))
+    params[name]["w"] = normal(split(key)[0], shape=(dim, 1))
+    params[name]["b"] = normal(split(key)[0], shape=(1,))
+    params[name]["u"] = normal(split(key)[0], shape=(dim, 1))
     return params
 
 
