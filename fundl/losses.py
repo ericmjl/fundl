@@ -12,11 +12,11 @@ def cross_entropy_loss_(y, y_hat, mean=True):
 
 
 def mse_loss_(y, y_hat):
-    return np.mean(np.power(y - y_hat, 2), axis=-1)
+    return np.mean(np.power(y - y_hat, 2))
 
 
 def mae_loss_(y, y_hat):
-    return np.mean(np.abs(y - y_hat), axis=-1)
+    return np.mean(np.abs(y - y_hat))
 
 
 def gaussian_kl_(z_mean, z_log_var, mean=True):
