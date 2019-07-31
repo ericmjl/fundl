@@ -1,6 +1,19 @@
 import autograd.numpy as np
 
 
+def adam_ops_init(flat_params):
+    adam_ops = {
+        "b1": 0.9,
+        "b2": 0.999,
+        "step_size": 0.001,
+        "eps": 1e-8,
+        "wd": 1.0,
+    }
+    adam_ops.update({"m": np.zeros(len(flat_params))})
+    adam_ops.update({"v": np.zeros(len(flat_params))})
+    return adam_ops
+
+
 def adam_step(
     op: dict, g: np.ndarray, i, flat_params: np.ndarray, weight_decay=False
 ):
@@ -34,4 +47,4 @@ def adam_step(
         flat_params = flat_params - op["step_size"] * mhat / (
             np.sqrt(vhat) + op["eps"]
         )
-    return flat_params
+    return flat_params, op
