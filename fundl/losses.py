@@ -1,7 +1,8 @@
 import autograd.numpy as np
 from fundl.layers.normalizing_flow import K_planar_flows
 
-def cross_entropy_loss(y, y_hat, mean=True):
+
+def cross_entropy_loss_(y, y_hat, mean=True):
     """
     Also corresponds to the log likelihood of the Bernoulli
     distribution.
@@ -10,15 +11,15 @@ def cross_entropy_loss(y, y_hat, mean=True):
     return xent
 
 
-def mse_loss(y, y_hat):
+def mse_loss_(y, y_hat):
     return np.mean(np.power(y - y_hat, 2), axis=-1)
 
 
-def mae_loss(y, y_hat):
+def mae_loss_(y, y_hat):
     return np.mean(np.abs(y - y_hat), axis=-1)
 
 
-def gaussian_kl(z_mean, z_log_var, mean=True):
+def gaussian_kl_(z_mean, z_log_var, mean=True):
     """
     KL divergence between the parameterizations of z_mean and z_log_var,
     and a unit Gaussian.
@@ -27,10 +28,16 @@ def gaussian_kl(z_mean, z_log_var, mean=True):
     return kl
 
 
+def mse_loss(flat_params, unflattener, model, x, y):
+    params = unflattener(flat_params)
+    preds = model(x, params)
+    return mse_loss_(y, preds)
+
+
 def ae_loss(flat_params, unflattener, model, x, y):
     params = unflattener(flat_params)
     y_hat = model(params, x)
-    return -np.sum(cross_entropy_loss(y, y_hat))
+    return -np.sum(cross_entropy_loss_(y, y_hat))
 
 
 def vae_loss(flat_params, unflattener, model, encoder, x, y, kwargs):
@@ -46,22 +53,24 @@ def vae_loss(flat_params, unflattener, model, encoder, x, y, kwargs):
     z_mean, z_log_var = encoder(params, x)
 
     # CE-loss
-    ce_loss = np.sum(cross_entropy_loss(y, y_hat))
+    ce_loss = np.sum(cross_entropy_loss_(y, y_hat))
     # KL-loss
-    kl_loss = np.sum(gaussian_kl(z_mean, z_log_var))
+    kl_loss = np.sum(gaussian_kl_(z_mean, z_log_var))
 
     l2_loss = 0
-    l2 = kwargs.pop('l2')
+    l2 = kwargs.pop("l2")
     if l2:
         if not isinstance(l2, bool):
-            raise TypeError('l2 should be a boolean')
+            raise TypeError("l2 should be a boolean")
         # L2-loss
         l2_loss = np.dot(flat_params, flat_params)
 
     return -ce_loss + kl_loss + l2_loss
 
 
-def planarflow_vae_loss(flat_params, unflattener, model, encoder, sampler, x, y, K, l2=True):
+def planarflow_vae_loss(
+    flat_params, unflattener, model, encoder, sampler, x, y, K, l2=True
+):
     """
     Loss function for normalizing flow VAEs.
 
@@ -86,9 +95,9 @@ def planarflow_vae_loss(flat_params, unflattener, model, encoder, sampler, x, y,
     z_mean, z_log_var = encoder(params, x)
 
     # CE-loss
-    ce_loss = np.sum(cross_entropy_loss(y, y_hat))
+    ce_loss = np.sum(cross_entropy_loss_(y, y_hat))
     # KL-loss
-    kl_loss = np.sum(gaussian_kl(z_mean, z_log_var))
+    kl_loss = np.sum(gaussian_kl_(z_mean, z_log_var))
 
     # L2-loss
     l2_loss = 0
