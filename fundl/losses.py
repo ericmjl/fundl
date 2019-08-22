@@ -37,7 +37,7 @@ def mse_loss(flat_params, unflattener, model, x, y):
 def ae_loss(flat_params, unflattener, model, x, y):
     params = unflattener(flat_params)
     y_hat = model(params, x)
-    return -np.sum(cross_entropy_loss_(y, y_hat))
+    return -np.mean(cross_entropy_loss_(y, y_hat))
 
 
 def vae_loss(flat_params, unflattener, model, encoder, x, y, kwargs):

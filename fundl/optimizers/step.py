@@ -7,7 +7,7 @@ def adam_ops_init(flat_params):
         "b2": 0.999,
         "step_size": 0.001,
         "eps": 1e-8,
-        "wd": 1.0,
+        "wd": 0.001,
     }
     adam_ops.update({"m": np.zeros(len(flat_params))})
     adam_ops.update({"v": np.zeros(len(flat_params))})
@@ -37,7 +37,6 @@ def adam_step(
     mhat = op["m"] / (1 - op["b1"] ** (i + 1))  # Bias correction.
     vhat = op["v"] / (1 - op["b2"] ** (i + 1))
     if weight_decay:
-        wd = op.get("wd")
         flat_params = (
             flat_params
             - op["step_size"] * mhat / (np.sqrt(vhat) + op["eps"])
