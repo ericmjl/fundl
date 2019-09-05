@@ -21,3 +21,7 @@ def dropout(p, x):
     """
     mask = np.random.binomial(n=1, p=p, size=x.shape[1])
     return x * mask
+
+
+def batch_norm(p, x):
+    pass
