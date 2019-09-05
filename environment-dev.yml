@@ -8,6 +8,7 @@ dependencies:
 - autograd
 - black
 - conda
+- hypothesis
 - isort
 - jax
 - jaxlib
@@ -16,5 +17,8 @@ dependencies:
 - mypy
 - numpy
 - pycodestyle
+- pydocstyle
+- pylint
 - pytest
+- pytest-xdist
 - scipy
