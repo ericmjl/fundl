@@ -1,5 +1,5 @@
 import jax.numpy as np
-from ..nonlinearities import identity
+from fundl.activations import identity
 
 
 def dense(params, x, nonlin=identity):
