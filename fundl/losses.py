@@ -1,25 +1,49 @@
-import autograd.numpy as np
-from fundl.layers.normalizing_flow import K_planar_flows
+"""
+Conventions:
+
+- Loss functions that begin with an underscore are meant to be used inside of another
+  loss function that is differentiable w.r.t. parameters.
+
+  The signature should be `func(y, y_hat, **kwargs)`.
+
+- The rest of the loss functions should be of a signature:
+
+      `func(params, model, x, y, **kwargs)
+"""
+
+import jax.numpy as np
+from .layers.normalizing_flow import K_planar_flows
 
 
-def cross_entropy_loss_(y, y_hat, mean=True):
+def _cross_entropy_loss(y, y_hat, mean=True):
     """
     Also corresponds to the log likelihood of the Bernoulli
     distribution.
+
+    Intended to be used inside of another function that differentiates w.r.t.
+    parameters.
     """
     xent = y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat)
     return xent
 
 
-def mse_loss_(y, y_hat):
-    return np.mean(np.power(y - y_hat, 2))
+def _mse_loss(y, y_hat):
+    """
+    Intended to be used inside of another function that differentiates w.r.t.
+    parameters.
+    """
+    return np.mean(np.power(y - y_hat, 2), axis=-1)
 
 
-def mae_loss_(y, y_hat):
-    return np.mean(np.abs(y - y_hat))
+def _mae_loss(y, y_hat):
+    """
+    Intended to be used inside of another function that differentiates w.r.t.
+    parameters.
+    """
+    return np.mean(np.abs(y - y_hat), axis=-1)
 
 
-def gaussian_kl_(z_mean, z_log_var, mean=True):
+def _gaussian_kl(z_mean, z_log_var, mean=True):
     """
     KL divergence between the parameterizations of z_mean and z_log_var,
     and a unit Gaussian.
@@ -28,19 +52,13 @@ def gaussian_kl_(z_mean, z_log_var, mean=True):
     return kl
 
 
-def mse_loss(flat_params, unflattener, model, x, y):
-    params = unflattener(flat_params)
-    preds = model(x, params)
-    return mse_loss_(y, preds)
-
-
-def ae_loss(flat_params, unflattener, model, x, y):
+def ae_loss(params, model, x, y):
     params = unflattener(flat_params)
     y_hat = model(params, x)
-    return -np.mean(cross_entropy_loss_(y, y_hat))
+    return -np.sum(_cross_entropy_loss(y, y_hat))
 
 
-def vae_loss(flat_params, unflattener, model, encoder, x, y, kwargs):
+def vae_loss(params, model, encoder, x, y, kwargs):
     """
     Variational autoencoder loss.
 
@@ -53,9 +71,9 @@ def vae_loss(flat_params, unflattener, model, encoder, x, y, kwargs):
     z_mean, z_log_var = encoder(params, x)
 
     # CE-loss
-    ce_loss = np.sum(cross_entropy_loss_(y, y_hat))
+    ce_loss = np.sum(_cross_entropy_loss(y, y_hat))
     # KL-loss
-    kl_loss = np.sum(gaussian_kl_(z_mean, z_log_var))
+    kl_loss = np.sum(_gaussian_kl(z_mean, z_log_var))
 
     l2_loss = 0
     l2 = kwargs.pop("l2")
@@ -95,9 +113,9 @@ def planarflow_vae_loss(
     z_mean, z_log_var = encoder(params, x)
 
     # CE-loss
-    ce_loss = np.sum(cross_entropy_loss_(y, y_hat))
+    ce_loss = np.sum(_cross_entropy_loss(y, y_hat))
     # KL-loss
-    kl_loss = np.sum(gaussian_kl_(z_mean, z_log_var))
+    kl_loss = np.sum(_gaussian_kl(z_mean, z_log_var))
 
     # L2-loss
     l2_loss = 0

@@ -1,17 +1,18 @@
-import autograd.numpy as np
+import jax.numpy as np
+from ..nonlinearities import identity
 
 
-def dense(params, x, nonlin=None):
+def dense(params, x, nonlin=identity):
     """
     "dense" layers are just affine shifts + nonlinearities.
 
     affine shifts are represented by multiplication by weights and adding biases.
 
     Assumes that params is a dictionary with 'w' and 'b' as keys.
+
+    nonlinearity defaults to identity, but any elementwise numpy function can be applied.
     """
-    a = np.dot(x, params["w"]) + params["b"]
-    if nonlin:
-        a = nonlin(a)
+    a = nonlin(np.dot(x, params["w"]) + params["b"])
     return a
 
 

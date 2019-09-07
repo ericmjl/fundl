@@ -1,4 +1,4 @@
-import autograd.numpy as np
+import jax.numpy as np
 
 
 def safe_log(x, eps=1e-10):

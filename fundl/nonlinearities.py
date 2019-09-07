@@ -1,4 +1,4 @@
-import autograd.numpy as np
+import jax.numpy as np
 
 
 def sigmoid(x):
@@ -12,7 +12,10 @@ def relu(x):
 def tanh(x):
     return np.tanh(x)
 
-
 def leaky_relu(x, a):
     """Leaky ReLu"""
     pass
+
+
+def identity(x):
+    return x

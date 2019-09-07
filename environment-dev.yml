@@ -22,3 +22,7 @@ dependencies:
 - pytest
 - pytest-xdist
 - scipy
+- pylint
+- jax
+- jaxlib
+- autograd

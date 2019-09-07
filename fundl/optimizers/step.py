@@ -1,4 +1,4 @@
-import autograd.numpy as np
+import jax.numpy as np
 
 
 def adam_ops_init(flat_params):
