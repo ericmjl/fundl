@@ -12,6 +12,7 @@ Conventions:
 """
 
 import jax.numpy as np
+
 from .layers.normalizing_flow import K_planar_flows
 
 

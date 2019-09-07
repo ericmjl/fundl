@@ -1,4 +1,4 @@
-from jax.random import normal, PRNGKey, split
+from jax.random import PRNGKey, normal, split
 
 key = PRNGKey(42)
 

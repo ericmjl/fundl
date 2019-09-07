@@ -1,4 +1,5 @@
 import jax.numpy as np
+
 from ..nonlinearities import identity
 
 

@@ -1,5 +1,6 @@
-from ..bijectors import planar_flow, planar_flow_log_det_jacobian
 import jax.numpy as np
+
+from ..bijectors import planar_flow, planar_flow_log_det_jacobian
 
 
 def K_planar_flows(params, z, K):

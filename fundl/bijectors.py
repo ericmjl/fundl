@@ -1,5 +1,6 @@
 import jax.numpy as np
 from jax import grad
+
 from .utils import safe_log
 
 dtanh = grad(np.tanh)

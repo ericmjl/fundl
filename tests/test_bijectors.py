@@ -1,7 +1,9 @@
-from fundl.bijectors import planar_flow
+import autograd.numpy.random as npr
 from hypothesis import given
 from hypothesis import strategies as st
-import autograd.numpy.random as npr
+
+from fundl.bijectors import planar_flow
+
 
 @given(
     st.integers(min_value=2, max_value=20),

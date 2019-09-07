@@ -1,5 +1,6 @@
 make check:
-	black -l 79 src/
+	isort -rc -y .
+	black -l 79 .
 
 make test:
 	pytest -n auto

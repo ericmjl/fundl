@@ -2,10 +2,11 @@
 Variational autoencoder written entirely using fundl.
 """
 
-from fundl.layers import dense
-from fundl.nonlinearities import sigmoid, tanh
 import jax.numpy as np
 from jax.random import normal
+
+from fundl.layers import dense
+from fundl.nonlinearities import sigmoid, tanh
 
 
 # First, we define the encoder, sampler, and decoder.
