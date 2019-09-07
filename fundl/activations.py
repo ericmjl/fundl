@@ -1,3 +1,6 @@
+"""
+Activations functions for fundl.
+"""
 import jax.numpy as np
 
 
