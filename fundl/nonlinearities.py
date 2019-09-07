@@ -12,6 +12,7 @@ def relu(x):
 def tanh(x):
     return np.tanh(x)
 
+
 def leaky_relu(x, a):
     """Leaky ReLu"""
     pass
