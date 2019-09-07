@@ -11,6 +11,10 @@ def dense(params, x, nonlin=identity):
     Assumes that params is a dictionary with 'w' and 'b' as keys.
 
     nonlinearity defaults to identity, but any elementwise numpy function can be applied.
+
+    :param params: A dictionary of weights. Should have "w" and "b" as keywords.
+    :param x: Input data.
+    :param activation: A callable that applies an elementwise activation function on the output array.
     """
     a = nonlin(np.dot(x, params["w"]) + params["b"])
     return a
