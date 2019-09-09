@@ -5,8 +5,8 @@ key = PRNGKey(42)
 
 def add_dense_params(params, name, input_dim, output_dim):
     params[name] = dict()
-    params[name]["w"] = normal(split(key)[0], (input_dim, output_dim))
-    params[name]["b"] = normal(split(key)[0], (output_dim,))
+    params[name]["w"] = normal(split(key)[0], (input_dim, output_dim)) * 0.01
+    params[name]["b"] = normal(split(key)[0], (output_dim,)) * 0.01
     return params
 
 
@@ -15,26 +15,26 @@ def add_gru_params(params, name, input_dim, output_dim):
     ashape = (n_output,)  # array shape
 
     params[name] = dict()
-    params[name]["W_z"] = normal(split(key)[0], mshape)
-    params[name]["U_z"] = normal(split(key)[0], mshape)
-    params[name]["b_z"] = normal(split(key)[0], ashape)
+    params[name]["W_z"] = normal(split(key)[0], mshape) * 0.01
+    params[name]["U_z"] = normal(split(key)[0], mshape) * 0.01
+    params[name]["b_z"] = normal(split(key)[0], ashape) * 0.01
 
-    params[name]["W_r"] = normal(split(key)[0], mshape)
-    params[name]["U_r"] = normal(split(key)[0], (n_output, n_output))
-    params[name]["b_r"] = normal(split(key)[0], ashape)
+    params[name]["W_r"] = normal(split(key)[0], mshape) * 0.01
+    params[name]["U_r"] = normal(split(key)[0], (n_output, n_output)) * 0.01
+    params[name]["b_r"] = normal(split(key)[0], ashape) * 0.01
 
-    params[name]["W_h"] = normal(split(key)[0], mshape)
-    params[name]["U_h"] = normal(split(key)[0], (n_output, n_output))
-    params[name]["b_h"] = normal(split(key)[0], ashape)
+    params[name]["W_h"] = normal(split(key)[0], mshape) * 0.01
+    params[name]["U_h"] = normal(split(key)[0], (n_output, n_output)) * 0.01
+    params[name]["b_h"] = normal(split(key)[0], ashape) * 0.01
 
     return params
 
 
 def add_planar_flow_params(params, name, dim):
     params[name] = dict()
-    params[name]["w"] = normal(split(key)[0], shape=(dim, 1))
-    params[name]["b"] = normal(split(key)[0], shape=(1,))
-    params[name]["u"] = normal(split(key)[0], shape=(dim, 1))
+    params[name]["w"] = normal(split(key)[0], shape=(dim, 1)) * 0.01
+    params[name]["b"] = normal(split(key)[0], shape=(1,)) * 0.01
+    params[name]["u"] = normal(split(key)[0], shape=(dim, 1)) * 0.01
     return params
 
 
