@@ -1,3 +1,4 @@
+"""Example Feedforward neural network model."""
 from fundl.layers import dense
 from fundl.activations import relu
 from fundl.weights import add_dense_params
@@ -13,6 +14,7 @@ y = y.reshape(-1, 1)
 
 
 def model(p, x):
+    """Forward neural network model."""
     x = dense(p["dense1"], x, nonlin=relu)
     x = dense(p["dense2"], x)
     return x
