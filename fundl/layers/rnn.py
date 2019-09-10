@@ -57,8 +57,8 @@ def lstm(params, x):
     https://colah.github.io/posts/2015-08-Understanding-LSTMs/
     """
     outputs = []
-    h_t = np.ones(params["W_i"].shape[0],)
-    c_t = np.ones(params["W_i"].shape[0],)
+    h_t = np.zeros(params["W_i"].shape[0],)
+    c_t = np.zeros(params["W_i"].shape[0],)
     for _, row in enumerate(x):
         h_t, c_t = lstm_step(params, row, h_t, c_t)
         outputs.append(h_t)
