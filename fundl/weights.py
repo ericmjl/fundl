@@ -11,8 +11,8 @@ def add_dense_params(params, name, input_dim, output_dim):
 
 
 def add_gru_params(params, name, input_dim, output_dim):
-    mshape = (n_input, n_output)  # matrix shape
-    ashape = (n_output,)  # array shape
+    mshape = (input_dim, output_dim)  # matrix shape
+    ashape = (output_dim,)  # array shape
 
     params[name] = dict()
     params[name]["W_z"] = normal(split(key)[0], mshape) * 0.01
@@ -20,11 +20,15 @@ def add_gru_params(params, name, input_dim, output_dim):
     params[name]["b_z"] = normal(split(key)[0], ashape) * 0.01
 
     params[name]["W_r"] = normal(split(key)[0], mshape) * 0.01
-    params[name]["U_r"] = normal(split(key)[0], (n_output, n_output)) * 0.01
+    params[name]["U_r"] = (
+        normal(split(key)[0], (output_dim, output_dim)) * 0.01
+    )
     params[name]["b_r"] = normal(split(key)[0], ashape) * 0.01
 
     params[name]["W_h"] = normal(split(key)[0], mshape) * 0.01
-    params[name]["U_h"] = normal(split(key)[0], (n_output, n_output)) * 0.01
+    params[name]["U_h"] = (
+        normal(split(key)[0], (output_dim, output_dim)) * 0.01
+    )
     params[name]["b_h"] = normal(split(key)[0], ashape) * 0.01
 
     return params

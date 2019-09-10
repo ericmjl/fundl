@@ -16,7 +16,7 @@ import jax.numpy as np
 from .layers.normalizing_flow import K_planar_flows
 
 
-def _cross_entropy_loss(y, y_hat, mean=True):
+def _cross_entropy_loss(y, y_hat):
     """
     Also corresponds to the log likelihood of the Bernoulli
     distribution.
@@ -25,7 +25,7 @@ def _cross_entropy_loss(y, y_hat, mean=True):
     parameters.
     """
     xent = y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat)
-    return xent
+    return np.mean(xent)
 
 
 def _mse_loss(y, y_hat):
@@ -33,7 +33,7 @@ def _mse_loss(y, y_hat):
     Intended to be used inside of another function that differentiates w.r.t.
     parameters.
     """
-    return np.mean(np.power(y - y_hat, 2), axis=-1)
+    return np.sum(np.power(y - y_hat, 2))
 
 
 def _mae_loss(y, y_hat):
@@ -41,7 +41,7 @@ def _mae_loss(y, y_hat):
     Intended to be used inside of another function that differentiates w.r.t.
     parameters.
     """
-    return np.mean(np.abs(y - y_hat), axis=-1)
+    return np.mean(np.abs(y - y_hat))
 
 
 def _gaussian_kl(z_mean, z_log_var, mean=True):
@@ -53,8 +53,12 @@ def _gaussian_kl(z_mean, z_log_var, mean=True):
     return kl
 
 
+def mseloss(params, model, x, y):
+    y_hat = model(params, x)
+    return _mse_loss(y, y_hat)
+
+
 def ae_loss(params, model, x, y):
-    params = unflattener(flat_params)
     y_hat = model(params, x)
     return -np.sum(_cross_entropy_loss(y, y_hat))
 
@@ -67,7 +71,6 @@ def vae_loss(params, model, encoder, x, y, kwargs):
     :param bool l2: Whether or not to do l2 regularization.
     """
     # Make predictions
-    params = unflattener(flat_params)
     y_hat = model(params, x)
     z_mean, z_log_var = encoder(params, x)
 
@@ -87,17 +90,14 @@ def vae_loss(params, model, encoder, x, y, kwargs):
     return -ce_loss + kl_loss + l2_loss
 
 
-def planarflow_vae_loss(
-    flat_params, unflattener, model, encoder, sampler, x, y, K, l2=True
-):
+def planarflow_vae_loss(params, model, encoder, sampler, x, y, K, l2=True):
     """
     Loss function for normalizing flow VAEs.
 
     Assumes the sampling layer is Gaussian-distributed, and that the
     normalizing flows that are used are planar flows.
 
-    :param flat_params, unflattener: Parameters, flattened, and corresponding
-        unflattener
+    :param params: Parameters in a dictionary.
     :param model: Function that specifies the model.
         Should have signature: (params, x, K)
     :param encoder: Function that specifies the encoder portion of the model.
@@ -109,7 +109,6 @@ def planarflow_vae_loss(
     :param l2: Whether or not to use L2 regularization.
     """
     # Make predictions
-    params = unflattener(flat_params)
     y_hat = model(params, x, K)
     z_mean, z_log_var = encoder(params, x)
 
@@ -122,7 +121,6 @@ def planarflow_vae_loss(
     l2_loss = 0
     if l2:
         l2_loss = np.dot(flat_params, flat_params)
-    params = unflattener(flat_params)
 
     z = sampler(z_mean, z_log_var)
     z, log_jacobians = K_planar_flows(params, z, K)

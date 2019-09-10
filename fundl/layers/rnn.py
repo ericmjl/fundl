@@ -1,7 +1,7 @@
 """RNN module."""
 import jax.numpy as np
 
-from ..activations import sigmoid
+from fundl.activations import sigmoid
 from fundl.utils import ndims
 
 # def rnn(params: dict, x: np.array):
@@ -13,7 +13,7 @@ from fundl.utils import ndims
 
 def gru_step(params, x: np.array, h_t: np.array):
     """
-    One in the GRU.
+    One step in the GRU.
 
     :param params: Dictionary of parameters.
     :param x: One row from the input data.
@@ -21,7 +21,7 @@ def gru_step(params, x: np.array, h_t: np.array):
     """
     # Transform x into a row vector with an explicit sample dimension.
     if ndims(x) == 1:
-        x = x.reshape(1, -1)
+        x = np.reshape(x, newshape=(1, -1))
     z_t = sigmoid(
         np.dot(x, params["W_z"]) + np.dot(x, params["U_z"]) + params["b_z"]
     )
