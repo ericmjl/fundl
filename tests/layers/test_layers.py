@@ -8,9 +8,9 @@ from fundl.layers import batch_norm, dense, dropout
 
 
 @given(
-    integers(min_value=1, max_value=10),
-    integers(min_value=1, max_value=10),
-    integers(min_value=1, max_value=10),
+    input_size=integers(min_value=1, max_value=10),
+    output_size=integers(min_value=1, max_value=10),
+    n_samples=integers(min_value=1, max_value=10),
 )
 def test_dense(input_size, output_size, n_samples):
     params = dict()
