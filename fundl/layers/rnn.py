@@ -1,7 +1,7 @@
 """RNN module."""
 import jax.numpy as np
 
-from fundl.activations import sigmoid
+from fundl.activations import sigmoid, tanh
 from fundl.utils import ndims
 
 # def rnn(params: dict, x: np.array):
@@ -49,3 +49,44 @@ def gru(params: dict, x: np.array):
         h_t = gru_step(params, row, h_t)
         outputs.append(h_t)
     return np.vstack(outputs)
+
+
+def lstm(params, x):
+    """
+    LSTM layer implemented according to equations here:
+    https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+    """
+    outputs = []
+    h_t = np.zeros(params["W_i"].shape[0],)
+    c_t = np.zeros(params["W_i"].shape[0],)
+    for _, row in enumerate(x):
+        h_t, c_t = lstm_step(params, row, h_t, c_t)
+        outputs.append(h_t)
+    return np.vstack(outputs)
+    
+
+def lstm_step(params, x_t, h_t, c_t):
+    """
+    One step in the lstm.
+    
+    :param params: Dictionary of parameters.
+    :param x: One row from the input data.
+    :param h_t: Hidden state vector, the output from previous step.
+    :param c_t: Cell state vector, the output from previous step.
+    """
+    # transpose x
+    x_t = np.transpose(x_t)
+    # concatenate the previous hidden state with new input
+    h_t = np.concatenate([h_t, x_t])
+
+    i_t = sigmoid(np.dot(params["W_i"], h_t) + params["b_i"])
+    ctilde_t = tanh(np.dot(params["W_c"], h_t) + params["b_c"])
+    f_t = sigmoid(np.dot(params["W_f"], h_t) + params["b_f"])
+    c_t = np.multiply(f_t, ctilde_t) + np.multiply(i_t, ctilde_t)
+    
+    o_t = sigmoid(np.dot(params["W_o"], h_t) + params["b_o"])
+    h_t = np.multiply(o_t, tanh(c_t))
+    
+    return h_t, c_t
+    
+    
