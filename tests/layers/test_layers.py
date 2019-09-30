@@ -1,7 +1,7 @@
 import jax.numpy as np
 import numpy.random as npr
 import pytest
-from hypothesis import given
+from hypothesis import given, settings
 from hypothesis.strategies import integers
 
 from fundl.layers import batch_norm, dense, dropout
@@ -12,6 +12,7 @@ from fundl.layers import batch_norm, dense, dropout
     output_size=integers(min_value=1, max_value=10),
     n_samples=integers(min_value=1, max_value=10),
 )
+@settings(deadline=None)
 def test_dense(input_size, output_size, n_samples):
     params = dict()
     params["w"] = npr.normal(size=(input_size, output_size))

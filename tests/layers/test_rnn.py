@@ -2,7 +2,7 @@
 from fundl.layers.rnn import gru, lstm
 from fundl.weights import add_gru_params, add_lstm_params
 
-from hypothesis import given
+from hypothesis import given, settings
 from hypothesis.strategies import integers
 
 import numpy as np
@@ -25,7 +25,8 @@ def test_gru():
     input_dim=integers(min_value=1, max_value=10),
     output_dim=integers(min_value=1, max_value=10),
     n_samples=integers(min_value=1, max_value=10),
-)    
+)
+@settings(deadline=None)
 def test_lstm(input_dim, output_dim, n_samples):
     """Test for lstm layer."""
     params = dict()

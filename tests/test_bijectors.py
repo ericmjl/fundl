@@ -1,5 +1,5 @@
 import autograd.numpy.random as npr
-from hypothesis import given
+from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from fundl.bijectors import planar_flow
@@ -9,6 +9,7 @@ from fundl.bijectors import planar_flow
     st.integers(min_value=2, max_value=20),
     st.integers(min_value=1, max_value=20),
 )
+@settings(deadline=None)
 def test_planar_flow(input_cols, n_samples):
     params = dict()
     params["w"] = npr.normal(size=(input_cols, 1))
