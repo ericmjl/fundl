@@ -1,14 +1,13 @@
-from fundl.layers.rnn import gru, lstm, lstm_step
-from fundl.layers import dense
-from fundl.losses import _mse_loss
-from fundl.weights import add_gru_params, add_lstm_params, add_dense_params
-from fundl.datasets import get_simple_sequence
-from jax.experimental.optimizers import sgd, adam
-from jax import grad
-
-
 import jax.numpy as np
 import numpy as onp
+from jax import grad
+from jax.experimental.optimizers import adam, sgd
+
+from fundl.datasets import get_simple_sequence
+from fundl.layers import dense
+from fundl.layers.rnn import gru, lstm, lstm_step
+from fundl.losses import _mse_loss
+from fundl.weights import add_dense_params, add_gru_params, add_lstm_params
 
 N_VOCABULARY = 10
 data = get_simple_sequence(N_VOCABULARY)

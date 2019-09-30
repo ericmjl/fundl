@@ -1,7 +1,7 @@
 """RNN module."""
 import jax.numpy as np
 
-from fundl.activations import tanh, relu
+from fundl.activations import relu, tanh
 from fundl.utils import ndims
 
 # def rnn(params: dict, x: np.array):

@@ -1,13 +1,12 @@
 """Example Feedforward neural network model."""
-from fundl.layers import dense
-from fundl.activations import relu
-from fundl.weights import add_dense_params
-from fundl.losses import mseloss
-
-from jax.experimental.optimizers import adam
 from jax import grad
-from sklearn.datasets import make_regression
+from jax.experimental.optimizers import adam
 
+from fundl.activations import relu
+from fundl.layers import dense
+from fundl.losses import mseloss
+from fundl.weights import add_dense_params
+from sklearn.datasets import make_regression
 
 x, y = make_regression(n_samples=1000, n_features=10, n_informative=2)
 y = y.reshape(-1, 1)

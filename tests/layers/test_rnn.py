@@ -1,12 +1,11 @@
 """RNN layer tests."""
-from fundl.layers.rnn import gru, lstm
-from fundl.weights import add_gru_params, add_lstm_params
-
+import numpy as np
+import numpy.random as npr
 from hypothesis import given, settings
 from hypothesis.strategies import integers
 
-import numpy as np
-import numpy.random as npr
+from fundl.layers.rnn import gru, lstm
+from fundl.weights import add_gru_params, add_lstm_params
 
 
 def test_gru():
