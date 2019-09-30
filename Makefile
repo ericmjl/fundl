@@ -3,4 +3,4 @@ make check:
 	black -l 79 .
 
 make test:
-	pytest -n auto
+	pytest -n auto -vvv
