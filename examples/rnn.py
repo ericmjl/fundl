@@ -2,7 +2,7 @@ from fundl.layers.rnn import gru, lstm, lstm_step
 from fundl.layers import dense
 from fundl.losses import _mse_loss
 from fundl.weights import add_gru_params, add_lstm_params, add_dense_params
-from fundl.datasets import
+from fundl.datasets import get_simple_sequence
 from jax.experimental.optimizers import sgd, adam
 from jax import grad
 
@@ -12,7 +12,6 @@ import numpy as onp
 
 N_VOCABULARY = 10
 data = get_simple_sequence(N_VOCABULARY)
-
 
 
 def model(p, x):
@@ -56,13 +55,13 @@ print(params)
 
 state = init(params)
 for i in range(1000):
-#     for row, out in zip(x, y):
-#         row = row.reshape(1, -1)
-#         g = dloss(params, model, row, out)
-#         state = update(i, g, state)
-#         params = get_params(state)
-#         l = mseloss(params, model, row, out)
-#         print(i, l, row, model(params, row))
+    #     for row, out in zip(x, y):
+    #         row = row.reshape(1, -1)
+    #         g = dloss(params, model, row, out)
+    #         state = update(i, g, state)
+    #         params = get_params(state)
+    #         l = mseloss(params, model, row, out)
+    #         print(i, l, row, model(params, row))
     g = dloss(params, model, x, y)
     l = mseloss(params, model, x, y)
 

@@ -57,13 +57,13 @@ def lstm(params, x):
     https://colah.github.io/posts/2015-08-Understanding-LSTMs/
     """
     outputs = []
-    h_t = np.zeros(params["W_i"].shape[0],)
-    c_t = np.zeros(params["W_i"].shape[0],)
+    h_t = np.zeros(params["W_i"].shape[0])
+    c_t = np.zeros(params["W_i"].shape[0])
     for _, row in enumerate(x):
         h_t, c_t = lstm_step(params, row, h_t, c_t)
         outputs.append(h_t)
     return np.vstack(outputs)
-    
+
 
 def lstm_step(params, x_t, h_t, c_t):
     """
@@ -83,10 +83,8 @@ def lstm_step(params, x_t, h_t, c_t):
     ctilde_t = tanh(np.dot(params["W_c"], h_t) + params["b_c"])
     f_t = relu(np.dot(params["W_f"], h_t) + params["b_f"])
     c_t = np.multiply(f_t, ctilde_t) + np.multiply(i_t, ctilde_t)
-    
+
     o_t = relu(np.dot(params["W_o"], h_t) + params["b_o"])
     h_t = np.multiply(o_t, tanh(c_t))
-    
+
     return h_t, c_t
-    
-    

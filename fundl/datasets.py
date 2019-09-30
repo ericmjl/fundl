@@ -2,8 +2,6 @@
 import numpy as np
 
 
-
-
 def get_simple_sequence(n_vocab, repeat=10):
     data = []
     for i in range(repeat):

@@ -37,5 +37,3 @@ def test_lstm(input_dim, output_dim, n_samples):
     out = lstm(params["lstm"], x)
 
     assert out.shape == y.shape
-    
-    
