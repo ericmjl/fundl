@@ -1,5 +1,5 @@
 ```python
-from fundl.datasets import get_simple_sequence
+from fundl.datasets import make_simple_sequence
 from fundl.layers.rnn import lstm
 from fundl.layers import dense
 from fundl.losses import _mse_loss
@@ -11,7 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 
 N_VOCABULARY = 10
-data = get_simple_sequence(N_VOCABULARY)
+data = make_simple_sequence(N_VOCABULARY)
 # data = np.sin(x=np.)
 data
 

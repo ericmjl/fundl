@@ -2,7 +2,7 @@
 import numpy as np
 
 
-def get_simple_sequence(n_vocab, repeat=10):
+def make_simple_sequence(n_vocab, repeat=10):
     data = []
     for i in range(repeat):
         for j in range(n_vocab):
