@@ -1,4 +1,4 @@
-make check:
+make format:
 	isort -rc -y .
 	black -l 79 .
 
