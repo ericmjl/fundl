@@ -12,6 +12,8 @@ Conventions:
 """
 
 import jax.numpy as np
+# https://github.com/google/jax/issues/190#issuecomment-451782333
+from jax.flatten_util import ravel_pytree
 
 from .layers.normalizing_flow import K_planar_flows
 
@@ -85,6 +87,7 @@ def vae_loss(params, model, encoder, x, y, kwargs):
         if not isinstance(l2, bool):
             raise TypeError("l2 should be a boolean")
         # L2-loss
+        flat_params, unflattener = ravel_pytree(params)
         l2_loss = np.dot(flat_params, flat_params)
 
     return -ce_loss + kl_loss + l2_loss
@@ -120,6 +123,7 @@ def planarflow_vae_loss(params, model, encoder, sampler, x, y, K, l2=True):
     # L2-loss
     l2_loss = 0
     if l2:
+        flat_params, unflattener = ravel_pytree(params)
         l2_loss = np.dot(flat_params, flat_params)
 
     z = sampler(z_mean, z_log_var)
