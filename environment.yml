@@ -17,6 +17,7 @@ dependencies:
 - jupyterlab=1.1.1
 - mypy=0.720
 - numpy=1.17.2
+- pandas=0.25.1
 - pycodestyle=2.5.0
 - pydocstyle=4.0.1
 - pylint=2.3.1
