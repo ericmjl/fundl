@@ -5,7 +5,7 @@ from jax.experimental.optimizers import adam, sgd
 
 from fundl.datasets import make_simple_sequence
 from fundl.layers import dense
-from fundl.layers.rnn import gru, lstm, lstm_step
+from fundl.layers.rnn import gru, lstm
 from fundl.losses import _mse_loss
 from fundl.weights import add_dense_params, add_gru_params, add_lstm_params
 
@@ -15,21 +15,22 @@ data = make_simple_sequence(N_VOCABULARY)
 
 def model(p, x):
     out = lstm(p["lstm"], x)
-    out = dense(p["dense"], out)
+    # out = lstm(p["lstm2"], out)
     return out
 
 
 def mseloss(p, model, x, y):
     yhat = model(p, x)
-    return np.sum(_mse_loss(y, yhat))
+    return np.mean(_mse_loss(y, yhat))
 
 
 dloss = grad(mseloss)
 
 
 params = dict()
-params = add_lstm_params(params, "lstm", input_dim=8, output_dim=3)
-params = add_dense_params(params, "dense", input_dim=3, output_dim=1)
+params = add_lstm_params(params, "lstm", input_dim=8, output_dim=1)
+# params = add_lstm_params(params, "lstm2", input_dim=5, output_dim=1)
+
 # Reshape data to the structure that an RNN needs.
 # We will set it up as sliding windows of 8 slots as input,
 # and 1 slot as output.
@@ -49,27 +50,22 @@ y = stacked_data[:, 8].reshape(-1, 1)
 print(model(params, x))
 
 
-init, update, get_params = sgd(step_size=0.1)
+init, update, get_params = adam(step_size=0.005)
 print(params)
 
 state = init(params)
-for i in range(1000):
-    #     for row, out in zip(x, y):
-    #         row = row.reshape(1, -1)
-    #         g = dloss(params, model, row, out)
-    #         state = update(i, g, state)
-    #         params = get_params(state)
-    #         l = mseloss(params, model, row, out)
-    #         print(i, l, row, model(params, row))
+for i in range(200):
     g = dloss(params, model, x, y)
     l = mseloss(params, model, x, y)
 
     o = model(params, x)
-    print(o)
 
     state = update(i, g, state)
     params = get_params(state)
     preds = model(params, x)
 
     print(i, l)
-    print(preds)
+
+import pandas as pd
+df = pd.DataFrame({"preds": preds.ravel(), "actual": y.ravel()})
+print(df)
