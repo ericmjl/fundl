@@ -35,7 +35,7 @@ def _mse_loss(y, y_hat):
     Intended to be used inside of another function that differentiates w.r.t.
     parameters.
     """
-    return np.sum(np.power(y - y_hat, 2))
+    return np.mean(np.power(y - y_hat, 2))
 
 
 def _mae_loss(y, y_hat):

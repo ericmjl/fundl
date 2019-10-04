@@ -42,15 +42,10 @@ def gru(params: dict, x: np.array):
     Implements the equations as stated here:
     https://en.wikipedia.org/wiki/Gated_recurrent_unit
     """
-    # outputs = []
     h_t = np.ones(params["W_z"].shape[1])
     step_func = partial(gru_step, params)
     _, outputs = lax.scan(step_func, init=h_t, xs=x)
     return outputs
-    # for _, row in enumerate(x):
-    #     h_t = gru_step(params, h_t, row)
-    #     outputs.append(h_t)
-    # return np.vstack(outputs)
 
 
 def lstm(params, x):
@@ -58,16 +53,20 @@ def lstm(params, x):
     LSTM layer implemented according to equations here:
     https://colah.github.io/posts/2015-08-Understanding-LSTMs/
     """
-    outputs = []
+    # outputs = []
     h_t = np.zeros(params["W_i"].shape[0])
     c_t = np.zeros(params["W_i"].shape[0])
-    for _, row in enumerate(x):
-        h_t, c_t = lstm_step(params, row, h_t, c_t)
-        outputs.append(h_t)
-    return np.vstack(outputs)
+
+    step_func = partial(lstm_step, params)
+    _, outputs = lax.scan(step_func, init=(h_t, c_t), xs=x)
+    return outputs
+    # for _, row in enumerate(x):
+    #     h_t, c_t = lstm_step(params, (h_t, c_t), row)
+    #     outputs.append(h_t)
+    # return np.vstack(outputs)
 
 
-def lstm_step(params, x_t, h_t, c_t):
+def lstm_step(params, carry, x_t):
     """
     One step in the lstm.
 
@@ -77,6 +76,7 @@ def lstm_step(params, x_t, h_t, c_t):
     :param c_t: Cell state vector, the output from previous step.
     """
     # transpose x
+    h_t, c_t = carry
     x_t = np.transpose(x_t)
     # concatenate the previous hidden state with new input
     h_t = np.concatenate([h_t, x_t])
@@ -89,4 +89,4 @@ def lstm_step(params, x_t, h_t, c_t):
     o_t = relu(np.dot(params["W_o"], h_t) + params["b_o"])
     h_t = np.multiply(o_t, tanh(c_t))
 
-    return h_t, c_t
+    return (h_t, c_t), h_t
