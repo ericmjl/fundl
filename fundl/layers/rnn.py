@@ -1,7 +1,7 @@
 """RNN module."""
 import jax.numpy as np
 from jax import lax
-from fundl.activations import relu
+from fundl.activations import relu, tanh
 from fundl.utils import ndims
 from functools import partial
 
@@ -82,11 +82,11 @@ def lstm_step(params, carry, x_t):
     h_t = np.concatenate([h_t, x_t])
 
     i_t = relu(np.dot(params["W_i"], h_t) + params["b_i"])
-    ctilde_t = relu(np.dot(params["W_c"], h_t) + params["b_c"])
+    ctilde_t = tanh(np.dot(params["W_c"], h_t) + params["b_c"])
     f_t = relu(np.dot(params["W_f"], h_t) + params["b_f"])
     c_t = np.multiply(f_t, ctilde_t) + np.multiply(i_t, ctilde_t)
 
     o_t = relu(np.dot(params["W_o"], h_t) + params["b_o"])
-    h_t = np.multiply(o_t, relu(c_t))
+    h_t = np.multiply(o_t, tanh(c_t))
 
     return (h_t, c_t), h_t
