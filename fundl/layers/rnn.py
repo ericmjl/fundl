@@ -1,17 +1,12 @@
 """RNN module."""
 import jax.numpy as np
-
+from jax import lax
 from fundl.activations import relu, tanh
 from fundl.utils import ndims
-
-# def rnn(params: dict, x: np.array):
-#     """
-#     Vanilla RNN layer.
-#     """
-#     h_t = np.ones(params[""])
+from functools import partial
 
 
-def gru_step(params, x: np.array, h_t: np.array):
+def gru_step(params, h_t: np.array, x_t: np.array):
     """
     One step in the GRU.
 
@@ -20,20 +15,24 @@ def gru_step(params, x: np.array, h_t: np.array):
     :param h_t: History vector, the output from previous step.
     """
     # Transform x into a row vector with an explicit sample dimension.
-    if ndims(x) == 1:
-        x = np.reshape(x, newshape=(1, -1))
+    # if ndims(x_t) == 1:
+    #     x_t = np.reshape(x_t, newshape=(1, -1))
     z_t = relu(
-        np.dot(x, params["W_z"]) + np.dot(x, params["U_z"]) + params["b_z"]
+        np.dot(x_t, params["W_z"]) + np.dot(x_t, params["U_z"]) + params["b_z"]
     )
     r_t = relu(
-        np.dot(x, params["W_r"]) + np.dot(params["U_r"], h_t) + params["b_r"]
+        np.dot(x_t, params["W_r"]) + np.dot(h_t, params["U_r"]) + params["b_r"]
     )
-    h_t = z_t * h_t + (1 - z_t) * np.tanh(
-        np.dot(x, params["W_h"])
+    h_t = z_t * h_t + (1 - z_t) * relu(
+        np.dot(x_t, params["W_h"])
         + np.dot((r_t * h_t), params["U_h"])
         + params["b_h"]
     )
-    return h_t
+    return h_t, h_t
+
+from jax import lax
+from functools import partial
+
 
 
 def gru(params: dict, x: np.array):
@@ -43,12 +42,15 @@ def gru(params: dict, x: np.array):
     Implements the equations as stated here:
     https://en.wikipedia.org/wiki/Gated_recurrent_unit
     """
-    outputs = []
+    # outputs = []
     h_t = np.ones(params["W_z"].shape[1])
-    for _, row in enumerate(x):
-        h_t = gru_step(params, row, h_t)
-        outputs.append(h_t)
-    return np.vstack(outputs)
+    step_func = partial(gru_step, params)
+    _, outputs = lax.scan(step_func, init=h_t, xs=x)
+    return outputs
+    # for _, row in enumerate(x):
+    #     h_t = gru_step(params, h_t, row)
+    #     outputs.append(h_t)
+    # return np.vstack(outputs)
 
 
 def lstm(params, x):
@@ -68,7 +70,7 @@ def lstm(params, x):
 def lstm_step(params, x_t, h_t, c_t):
     """
     One step in the lstm.
-    
+
     :param params: Dictionary of parameters.
     :param x: One row from the input data.
     :param h_t: Hidden state vector, the output from previous step.
