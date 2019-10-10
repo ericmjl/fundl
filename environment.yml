@@ -16,6 +16,7 @@ dependencies:
 - jupyter=1.0.0
 - jupyterlab=1.1.1
 - mypy=0.720
+- networkx=2.3
 - numpy=1.17.2
 - pandas=0.25.1
 - pycodestyle=2.5.0
