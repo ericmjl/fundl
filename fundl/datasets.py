@@ -28,8 +28,8 @@ def make_graph_counting_dataset(n_graphs):
     """
     graphs = []
     for i in range(n_graphs):
-        n_nodes = np.random.randint(3, 10)
-        G = nx.random_regular_graph(d=3, n=n_nodes)
+        n_nodes = np.random.randint(5, 11)
+        G = nx.random_regular_graph(d=4, n=n_nodes)
         for n in G.nodes():
             G.node[n]["features"] = np.array([1, np.random.normal()])
         graphs.append(G)
