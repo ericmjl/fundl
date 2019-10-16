@@ -10,6 +10,9 @@ dependencies:
 - conda=4.7.11
 - fastcache=1.1.0
 - hypothesis=4.35.0
+- holoviews=1.12.6
+- hvplot=0.5.1
+- bokeh=1.3.4
 - isort=4.3.21
 - jax=0.1.44
 - jaxlib=0.1.28
@@ -17,11 +20,15 @@ dependencies:
 - jupyterlab=1.1.1
 - mypy=0.720
 - networkx=2.3
+- nodejs=12.11.1
 - numpy=1.17.2
 - pandas=0.25.1
+- panel=0.6.4
+- param=1.9.2
 - pycodestyle=2.5.0
 - pydocstyle=4.0.1
 - pylint=2.3.1
 - pytest-xdist=1.29.0
 - pytest=5.1.2
 - scipy=1.3.1
+- streamz=0.5.2

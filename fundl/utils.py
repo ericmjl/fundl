@@ -1,4 +1,5 @@
 import jax.numpy as np
+import numpy as onp
 
 
 def safe_log(x, eps=1e-10):
@@ -16,6 +17,6 @@ def ndims(x):
 def pad_graph(F, A, to_size: int):
     """Pad F and A matrices with zeros to fit graph size."""
     pad_size = to_size - len(F)
-    F = np.pad(F, [(0, pad_size), (0, 0)])
-    A = np.pad(A, [(0, pad_size), (0, pad_size)])
+    F = onp.pad(F, [(0, pad_size), (0, 0)])
+    A = onp.pad(A, [(0, pad_size), (0, pad_size)])
     return F, A
