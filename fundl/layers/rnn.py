@@ -30,9 +30,9 @@ def gru_step(params, h_t: np.array, x_t: np.array):
     )
     return h_t, h_t
 
+
 from jax import lax
 from functools import partial
-
 
 
 def gru(params: dict, x: np.array):
@@ -60,10 +60,6 @@ def lstm(params, x):
     step_func = partial(lstm_step, params)
     _, outputs = lax.scan(step_func, init=(h_t, c_t), xs=x)
     return outputs
-    # for _, row in enumerate(x):
-    #     h_t, c_t = lstm_step(params, (h_t, c_t), row)
-    #     outputs.append(h_t)
-    # return np.vstack(outputs)
 
 
 def lstm_step(params, carry, x_t):
@@ -71,9 +67,10 @@ def lstm_step(params, carry, x_t):
     One step in the lstm.
 
     :param params: Dictionary of parameters.
-    :param x: One row from the input data.
-    :param h_t: Hidden state vector, the output from previous step.
-    :param c_t: Cell state vector, the output from previous step.
+    :param x_t: One row from the input data.
+    :param carry: h_t and c_t from previous step.
+        h_t is the hidden state vector,
+        while c_t is the cell state vector.
     """
     # transpose x
     h_t, c_t = carry
@@ -90,3 +87,55 @@ def lstm_step(params, carry, x_t):
     h_t = np.multiply(o_t, tanh(c_t))
 
     return (h_t, c_t), h_t
+
+
+from fundl.activations import sigmoid
+
+
+def mlstm1900_step(params, carry, x_t):
+    """
+    Implementation of mLSTMCell from UniRep paper.
+
+    Exact source code reference:
+    https://github.com/churchlab/UniRep/blob/master/unirep.py#L75
+
+    Shapes of parameters:
+    - wmx: 10, 1900
+    - wmh: 1900, 1900
+    - wx: 10, 7600
+    - wh: 1900, 7600
+
+    Shapes of inputs:
+    - x_t: (1, 10)
+    - carry:
+        - h_t: (1, 1900)
+        - c_t: (1, 1900)
+    """
+    h_t, c_t = carry
+
+    # Shape annotation
+    # (:, 10) @ (10, 1900) * (:, 1900) @ (1900, 1900) => (:, 1900)
+    m = np.matmul(x_t, params["wmx"]) * np.matmul(h_t, params["wmh"])
+
+    # (:, 10) @ (10, 7600) * (:, 1900) @ (1900, 7600) + (7600, ) => (:, 7600)
+    z = np.matmul(x_t, params["wx"]) + np.matmul(m, params["wh"]) + params["b"]
+
+    # Splitting along axis 1, four-ways, gets us (:, 1900) as the shape
+    # for each of i, f, o and u
+    i, f, o, u = np.split(z, 4, 1)  # input, forget, output, update
+
+    # Elementwise transforms here.
+    # Shapes are are (:, 1900) for each of the four.
+    i = sigmoid(i)
+    f = sigmoid(f)
+    o = sigmoid(o)
+    u = tanh(u)
+
+    # (:, 1900) * (:, 1900) + (:, 1900) * (:, 1900) => (:, 1900)
+    c = f * c_t + i * u
+
+    # (:, 1900) * (:, 1900) => (:, 1900)
+    h = o * tanh(c)
+
+    # h, c each have shape (:, 1900)
+    return (h, c), h  # returned this way to match rest of fundl API.
