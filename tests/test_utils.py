@@ -1,7 +1,8 @@
 from fundl.utils import pad_graph
 from fundl.datasets import make_graph_counting_dataset
 import numpy as np
-import networkx as nx 
+import networkx as nx
+
 
 def test_pad_graph():
     G = make_graph_counting_dataset(1)[0]

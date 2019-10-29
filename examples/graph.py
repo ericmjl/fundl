@@ -43,6 +43,7 @@ from fundl.activations import relu
 from fundl.losses import _mse_loss
 from jax import grad
 
+
 def mseloss(p, model, Fs, As, y):
     yhat = model(p, Fs, As)
     return np.mean(_mse_loss(y, yhat))
