@@ -19,7 +19,7 @@ def atom_graph(mol: Chem.rdchem.Mol):
         for atom in mol.GetAtoms():
             G.add_node(
                 atom.GetIdx(),
-                atomic_num=atom.GetAtomicNum(),
+                atomic_num=atom.GetAtomicNum(), #this should be instantiated once, and later reused for defining the feature vector
                 formal_charge=atom.GetFormalCharge(),
                 chiral_tag=atom.GetChiralTag(),
                 hybridization=atom.GetHybridization(),
@@ -65,11 +65,18 @@ def bond_graph(mol: Chem.rdchem.Mol):
         for bond in mol.GetBonds():
             G.add_node(
                 (bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()),
-                bond_type=bond.GetBondType(),
+                bond_type=bond.GetBondTypeAsDouble(),
                 aromatic=bond.GetIsAromatic(),
                 stereo=bond.GetStereo(),
                 in_ring=bond.IsInRing(),
                 is_conjugated=bond.GetIsConjugated(),
+                features = [
+                    bond.GetBondTypeAsDouble(),
+                    int(bond.GetIsAromatic()),
+                    bond.GetStereo(),
+                    int(bond.IsInRing()),
+                    int(bond.GetIsConjugated()),
+                ]
             )
 
         for atom in mol.GetAtoms():
