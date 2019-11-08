@@ -15,3 +15,20 @@ def test_pad_graph():
     F, A = pad_graph(F, A, to_size=15)
     assert len(F) == len(A)
     assert len(F) == 15
+
+
+from fundl.utils import l2_normalize
+
+
+def test_l2_normalize():
+    x = np.array([[3, -3, 5, 4], [4, 5, 3, -3]])
+
+    expected = np.array(
+        [
+            [3 / 5, -3 / np.sqrt(34), 5 / np.sqrt(34), 4 / 5],
+            [4 / 5, 5 / np.sqrt(34), 3 / np.sqrt(34), -3 / 5],
+        ],
+        dtype=np.float32,
+    )
+
+    assert np.allclose(l2_normalize(x, axis=0), expected)
