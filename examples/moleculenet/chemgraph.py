@@ -73,7 +73,7 @@ def bond_graph(mol: Chem.rdchem.Mol):
                 features = [
                     bond.GetBondTypeAsDouble(),
                     int(bond.GetIsAromatic()),
-                    bond.GetStereo(),
+                    # bond.GetStereo(),
                     int(bond.IsInRing()),
                     int(bond.GetIsConjugated()),
                 ]
