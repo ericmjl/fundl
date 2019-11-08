@@ -104,3 +104,25 @@ def sliding_window(data, size, stepsize=1, padded=False, axis=-1, copy=True):
         return strided.copy()
     else:
         return strided
+
+
+def l2_normalize(arr, axis, epsilon=1e-12):
+    """
+    L2 normalize along a particular axis.
+
+    Doc taken from tf.nn.l2_normalize:
+    https://www.tensorflow.org/api_docs/python/tf/math/l2_normalize
+
+    output = x / (
+        sqrt(
+            max(
+                sum(x**2),
+                epsilon
+            )
+        )
+    )
+    """
+    sq_arr = np.power(arr, 2)
+    square_sum = np.sum(sq_arr, axis=axis, keepdims=True)
+    max_weights = np.maximum(square_sum, epsilon)
+    return np.divide(arr, np.sqrt(max_weights))
