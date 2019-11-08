@@ -2,6 +2,7 @@
 import jax.numpy as np
 from jax import lax
 from fundl.activations import relu, tanh
+from fundl.utils import l2_normalize
 from fundl.utils import ndims
 from functools import partial
 
@@ -118,7 +119,7 @@ def mlstm1900(params, x):
 
 def mlstm1900_step(params, carry, x_t):
     """
-    Implementation of mLSTMCell from UniRep paper.
+    Implementation of mLSTMCell from UniRep paper, with weight normalization.
 
     Exact source code reference:
     https://github.com/churchlab/UniRep/blob/master/unirep.py#L75
@@ -129,6 +130,13 @@ def mlstm1900_step(params, carry, x_t):
     - wx: 10, 7600
     - wh: 1900, 7600
 
+    - gmx: 1900
+    - gmh: 1900
+    - gx: 7600
+    - gh: 7600
+
+    - b: 7600
+
     Shapes of inputs:
     - x_t: (1, 10)
     - carry:
@@ -136,6 +144,15 @@ def mlstm1900_step(params, carry, x_t):
         - c_t: (1, 1900)
     """
     h_t, c_t = carry
+
+    # Perform weight normalization first
+    # (Corresponds to Line 113).
+    # In the original implementation, this is toggled by a boolean flag,
+    # but here we are enabling it by default.
+    params["wx"] = l2_normalize(params["wx"], axis=0) * params["gx"]
+    params["wh"] = l2_normalize(params["wh"], axis=0) * params["gh"]
+    params["wmx"] = l2_normalize(params["wmx"], axis=0) * params["gmx"]
+    params["wmh"] = l2_normalize(params["wmh"], axis=0) * params["gmh"]
 
     # Shape annotation
     # (:, 10) @ (10, 1900) * (:, 1900) @ (1900, 1900) => (:, 1900)
