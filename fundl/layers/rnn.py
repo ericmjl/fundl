@@ -92,6 +92,30 @@ def lstm_step(params, carry, x_t):
 from fundl.activations import sigmoid
 
 
+def mlstm1900(params, x):
+    """
+    LSTM layer implemented according to UniRep,
+    found here:
+    <link to GitHub>
+
+    This layer processes one encoded sequence at a time,
+    passed as a two dimensional array, with number of rows
+    being number of sliding windows, and number of columns
+    being the size of the sliding window (for the exact
+    reimplementation, window size is fixed to length 10)
+
+    :param params: All weights and biases for a single
+        mlstm1900 rnn cell.
+    :param x: One sequence, sliced by window size.
+    """
+    h_t = np.zeros(params["wmh"].shape[0])
+    c_t = np.zeros(params["wmh"].shape[0])
+
+    step_func = partial(mlstm1900_step, params)
+    _, outputs = lax.scan(step_func, init=(h_t, c_t), xs=x)
+    return outputs
+
+
 def mlstm1900_step(params, carry, x_t):
     """
     Implementation of mLSTMCell from UniRep paper.
@@ -122,7 +146,7 @@ def mlstm1900_step(params, carry, x_t):
 
     # Splitting along axis 1, four-ways, gets us (:, 1900) as the shape
     # for each of i, f, o and u
-    i, f, o, u = np.split(z, 4, 1)  # input, forget, output, update
+    i, f, o, u = np.split(z, 4, -1)  # input, forget, output, update
 
     # Elementwise transforms here.
     # Shapes are are (:, 1900) for each of the four.
@@ -132,10 +156,10 @@ def mlstm1900_step(params, carry, x_t):
     u = tanh(u)
 
     # (:, 1900) * (:, 1900) + (:, 1900) * (:, 1900) => (:, 1900)
-    c = f * c_t + i * u
+    c_t = f * c_t + i * u
 
     # (:, 1900) * (:, 1900) => (:, 1900)
-    h = o * tanh(c)
+    h_t = o * tanh(c_t)
 
     # h, c each have shape (:, 1900)
-    return (h, c), h  # returned this way to match rest of fundl API.
+    return (h_t, c_t), h_t  # returned this way to match rest of fundl API.
