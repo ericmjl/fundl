@@ -96,7 +96,7 @@ def mlstm1900(params, x):
     """
     LSTM layer implemented according to UniRep,
     found here:
-    <link to GitHub>
+    https://github.com/churchlab/UniRep/blob/master/unirep.py#L43
 
     This layer processes one encoded sequence at a time,
     passed as a two dimensional array, with number of rows
