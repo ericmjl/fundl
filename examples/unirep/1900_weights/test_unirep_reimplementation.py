@@ -1,3 +1,6 @@
+from time import time
+
+start = time()
 import jax.numpy as np
 from fundl.utils import sliding_window
 from fundl.layers.rnn import mlstm1900
@@ -69,10 +72,11 @@ def test_mlstm1900_example():
     # Pass through mLSTM1900
     out = mlstm1900(params, x)
     print("output: ", out)
-    print("output mean: ", out.mean(axis=0))
+    print("reps: ", out.mean(axis=0))
     print("output shape: ", out.shape)
     assert out.shape == (x.shape[0], 1900)
     # Check outputs
 
 
 test_mlstm1900_example()
+print(f"Time taken: {time() - start:.2f} seconds")
