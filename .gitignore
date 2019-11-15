@@ -109,3 +109,4 @@ venv.bak/
 
 # More custom
 examples/unirep/1900_weights/*.npy
+log.txt
