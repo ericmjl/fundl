@@ -1,9 +1,11 @@
 from time import time
 
-start = time()
 import jax.numpy as np
-from fundl.utils import sliding_window
+
 from fundl.layers.rnn import mlstm1900
+from fundl.utils import sliding_window
+
+start = time()
 
 aa_to_int = {
     "M": 1,
@@ -44,7 +46,7 @@ def aa_seq_to_int(s):
     return [24] + [aa_to_int[a] for a in s] + [25]
 
 
-def test_mlstm1900_example():
+def run_mlstm1900_example():
     # Set up an example
     sequence = "MRKGEELFTGVVPILVELDGDVNGHKFSVRGEGEGDATNGKLTLKFICTTGKLPVPWPTLVTTLTYGVQCFARYPDHMKQHDFFKSAMPEGYVQERTISFKDDGTYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNFNSHNVYITADKQKNGIKANFKIRHNVEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSVLSKDPNEKRDHMVLLEFVTAAGITHGMDELYK"
     print("sequence length: ", len(sequence))
@@ -78,5 +80,5 @@ def test_mlstm1900_example():
     # Check outputs
 
 
-test_mlstm1900_example()
+run_mlstm1900_example()
 print(f"Time taken: {time() - start:.2f} seconds")

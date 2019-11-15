@@ -4,8 +4,15 @@ Activations functions for fundl.
 import jax.numpy as np
 
 
-def sigmoid(x):
-    return 0.5 * np.tanh(x) + 0.5
+def sigmoid(x, version="tanh"):
+    if version not in ["tanh", "exp"]:
+        raise ValueError("version must be one of ['tanh' or 'exp']")
+
+    sigmoids = {
+        "tanh": lambda x: 0.5 * np.tanh(x) + 0.5,
+        "exp": lambda x: 1 / (1 + np.exp(-x)),
+    }
+    return sigmoids[version](x)
 
 
 def relu(x, alpha=0.1):

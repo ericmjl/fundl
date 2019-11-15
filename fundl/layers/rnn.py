@@ -1,10 +1,14 @@
 """RNN module."""
+import logging
+from functools import partial
+
 import jax.numpy as np
 from jax import lax
-from fundl.activations import relu, tanh
-from fundl.utils import l2_normalize
-from fundl.utils import ndims
-from functools import partial
+
+from fundl.activations import relu, sigmoid, tanh
+from fundl.utils import l2_normalize, ndims
+
+logging.basicConfig(filename="log.txt", level=logging.INFO, filemode="w")
 
 
 def gru_step(params, h_t: np.array, x_t: np.array):
@@ -30,10 +34,6 @@ def gru_step(params, h_t: np.array, x_t: np.array):
         + params["b_h"]
     )
     return h_t, h_t
-
-
-from jax import lax
-from functools import partial
 
 
 def gru(params: dict, x: np.array):
@@ -88,9 +88,6 @@ def lstm_step(params, carry, x_t):
     h_t = np.multiply(o_t, tanh(c_t))
 
     return (h_t, c_t), h_t
-
-
-from fundl.activations import sigmoid
 
 
 def mlstm1900(params, x):
@@ -154,29 +151,46 @@ def mlstm1900_step(params, carry, x_t):
     params["wmx"] = l2_normalize(params["wmx"], axis=0) * params["gmx"]
     params["wmh"] = l2_normalize(params["wmh"], axis=0) * params["gmh"]
 
+    # logging.debug(f"wx: {params['wx']}")
+    # logging.debug(f"wh: {params['wh']}")
+    # logging.debug(f"wmx: {params['wmx']}")
+    # logging.debug(f"wmh: {params['wmh']}")
+
     # Shape annotation
     # (:, 10) @ (10, 1900) * (:, 1900) @ (1900, 1900) => (:, 1900)
     m = np.matmul(x_t, params["wmx"]) * np.matmul(h_t, params["wmh"])
+    logging.debug(f"m: {m}")
 
     # (:, 10) @ (10, 7600) * (:, 1900) @ (1900, 7600) + (7600, ) => (:, 7600)
     z = np.matmul(x_t, params["wx"]) + np.matmul(m, params["wh"]) + params["b"]
+    logging.debug(f"z: {z}")
 
     # Splitting along axis 1, four-ways, gets us (:, 1900) as the shape
     # for each of i, f, o and u
-    i, f, o, u = np.split(z, 4, -1)  # input, forget, output, update
+    i, f, o, u = np.split(z, 4, axis=-1)  # input, forget, output, update
+    logging.debug(f"i: {i}")
+    logging.debug(f"f: {f}")
+    logging.debug(f"o: {o}")
+    logging.debug(f"u: {u}")
 
     # Elementwise transforms here.
     # Shapes are are (:, 1900) for each of the four.
-    i = sigmoid(i)
-    f = sigmoid(f)
-    o = sigmoid(o)
+    i = sigmoid(i, version="exp")
+    logging.debug(f"i: {i}")
+    f = sigmoid(f, version="exp")
+    logging.debug(f"f: {f}")
+    o = sigmoid(o, version="exp")
+    logging.debug(f"o: {o}")
     u = tanh(u)
+    logging.debug(f"u: {u}")
 
     # (:, 1900) * (:, 1900) + (:, 1900) * (:, 1900) => (:, 1900)
     c_t = f * c_t + i * u
+    logging.debug(f"c_t: {c_t}")
 
     # (:, 1900) * (:, 1900) => (:, 1900)
     h_t = o * tanh(c_t)
+    logging.debug(f"h_t: {h_t}")
 
     # h, c each have shape (:, 1900)
     return (h_t, c_t), h_t  # returned this way to match rest of fundl API.
