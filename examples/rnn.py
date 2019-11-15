@@ -1,5 +1,6 @@
 import jax.numpy as np
 import numpy as onp
+import pandas as pd
 from jax import grad
 from jax.experimental.optimizers import adam, sgd
 
@@ -66,6 +67,5 @@ for i in range(200):
 
     print(i, l)
 
-import pandas as pd
 df = pd.DataFrame({"preds": preds.ravel(), "actual": y.ravel()})
 print(df)

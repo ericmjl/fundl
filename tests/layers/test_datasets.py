@@ -1,5 +1,7 @@
-from fundl.datasets import make_graph_counting_dataset
 import pytest
+
+from fundl.datasets import make_graph_counting_dataset
+
 
 @pytest.mark.graphs
 def test_make_graph_counting_dataset():

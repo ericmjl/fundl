@@ -1,10 +1,18 @@
 """Graph node counting task."""
 
-from fundl.datasets import make_graph_counting_dataset
-from fundl.utils import pad_graph
-import numpy as onp
-import networkx as nx
 import jax.numpy as np
+import networkx as nx
+import numpy as onp
+from jax import grad
+from jax.experimental.optimizers import adam
+
+from fundl.activations import relu
+from fundl.datasets import make_graph_counting_dataset
+from fundl.layers import dense
+from fundl.layers.graph import gather, mpnn
+from fundl.losses import _mse_loss
+from fundl.utils import pad_graph
+from fundl.weights import add_dense_params
 
 Gs = make_graph_counting_dataset(n_graphs=1000)
 Fs = []
@@ -29,19 +37,10 @@ print(Fs.shape)
 print(As.shape)
 
 
-from fundl.weights import add_dense_params
-
 params = dict()
 params = add_dense_params(params, name="graph1", input_dim=2, output_dim=5)
 params = add_dense_params(params, name="graph2", input_dim=5, output_dim=3)
 params = add_dense_params(params, name="dense1", input_dim=3, output_dim=1)
-
-
-from fundl.layers.graph import mpnn, gather
-from fundl.layers import dense
-from fundl.activations import relu
-from fundl.losses import _mse_loss
-from jax import grad
 
 
 def mseloss(p, model, Fs, As, y):
@@ -61,7 +60,6 @@ dloss = grad(mseloss)
 
 print(model(params, Fs, As))
 
-from jax.experimental.optimizers import adam
 
 init, update, get_params = adam(step_size=0.005)
 print(params)

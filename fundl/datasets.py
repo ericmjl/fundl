@@ -1,6 +1,7 @@
 """Dataset generators."""
-import numpy as np
 import networkx as nx
+import numpy as np
+
 
 def make_simple_sequence(n_vocab, repeat=10):
     data = []

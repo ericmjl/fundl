@@ -1,7 +1,8 @@
-from fundl.utils import pad_graph
-from fundl.datasets import make_graph_counting_dataset
-import numpy as np
 import networkx as nx
+import numpy as np
+
+from fundl.datasets import make_graph_counting_dataset
+from fundl.utils import l2_normalize, pad_graph
 
 
 def test_pad_graph():
@@ -15,9 +16,6 @@ def test_pad_graph():
     F, A = pad_graph(F, A, to_size=15)
     assert len(F) == len(A)
     assert len(F) == 15
-
-
-from fundl.utils import l2_normalize
 
 
 def test_l2_normalize():

@@ -12,6 +12,7 @@ Conventions:
 """
 
 import jax.numpy as np
+
 # https://github.com/google/jax/issues/190#issuecomment-451782333
 from jax.flatten_util import ravel_pytree
 

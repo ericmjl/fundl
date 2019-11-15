@@ -1,15 +1,23 @@
 """Graph node counting task."""
 
-from fundl.datasets import make_graph_counting_dataset
-from fundl.utils import pad_graph
-import numpy as onp
-import networkx as nx
 import jax.numpy as np
-from chemgraph import atom_graph
-import janitor.chemistry
+import networkx as nx
+import numpy as onp
 
 # Gs = make_graph_counting_dataset(n_graphs=1000)
 import pandas as pd
+from jax import grad
+from jax.experimental.optimizers import adam
+
+import janitor.chemistry
+from chemgraph import atom_graph
+from fundl.activations import relu
+from fundl.datasets import make_graph_counting_dataset
+from fundl.layers import dense
+from fundl.layers.graph import gather, mpnn
+from fundl.losses import _mse_loss
+from fundl.utils import pad_graph
+from fundl.weights import add_dense_params
 
 df = (
     pd.read_csv("bace.csv")
@@ -50,19 +58,10 @@ print(Fs.shape)
 print(As.shape)
 
 
-from fundl.weights import add_dense_params
-
 params = dict()
 params = add_dense_params(params, name="graph1", input_dim=9, output_dim=20)
 params = add_dense_params(params, name="graph2", input_dim=20, output_dim=10)
 params = add_dense_params(params, name="dense1", input_dim=10, output_dim=1)
-
-
-from fundl.layers.graph import mpnn, gather
-from fundl.layers import dense
-from fundl.activations import relu
-from fundl.losses import _mse_loss
-from jax import grad
 
 
 def mseloss(p, model, Fs, As, y):
@@ -82,7 +81,6 @@ dloss = grad(mseloss)
 
 print(model(params, Fs, As))
 
-from jax.experimental.optimizers import adam
 
 init, update, get_params = adam(step_size=0.005)
 print(params)
