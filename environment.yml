@@ -35,3 +35,4 @@ dependencies:
 - streamz=0.5.2
 - pymc3=3.7
 - pre-commit=1.20
+- scikit-learn=0.22
