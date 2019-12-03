@@ -12,3 +12,8 @@ repos:
   rev: 19.3b0
   hooks:
   - id: black
+- repo: https://github.com/kynan/nbstripout
+  rev: master
+  hooks:
+    - id: nbstripout
+      files: ".ipynb"
