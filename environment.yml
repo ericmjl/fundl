@@ -36,3 +36,4 @@ dependencies:
 - pymc3=3.7
 - pre-commit=1.20
 - scikit-learn=0.22
+- pyjanitor=0.19.0
