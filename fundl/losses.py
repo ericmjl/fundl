@@ -31,6 +31,18 @@ def _cross_entropy_loss(y, y_hat):
     return np.mean(xent)
 
 
+def _neg_cross_entropy_loss(y, y_hat):
+    """
+    Also corresponds to the log likelihood of the Bernoulli
+    distribution.
+
+    Intended to be used inside of another function that differentiates w.r.t.
+    parameters.
+    """
+    xent = -(y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat))
+    return np.mean(xent)
+
+
 def _mse_loss(y, y_hat):
     """
     Intended to be used inside of another function that differentiates w.r.t.
@@ -54,6 +66,16 @@ def _gaussian_kl(z_mean, z_log_var, mean=True):
     """
     kl = -0.5 * (z_log_var - np.exp(z_log_var) - np.power(z_mean, 2) + 1)
     return kl
+
+
+def cross_entropy_loss(params, model, x, y):
+    y_hat = model(params, x)
+    return _cross_entropy_loss(y, y_hat)
+
+
+def neg_cross_entropy_loss(params, model, x, y):
+    y_hat = model(params, x)
+    return _neg_cross_entropy_loss(y, y_hat)
 
 
 def mseloss(params, model, x, y):

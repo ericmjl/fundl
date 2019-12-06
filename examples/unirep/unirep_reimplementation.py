@@ -53,23 +53,23 @@ def run_mlstm1900_example():
 
     sequence = aa_seq_to_int(sequence)[:-1]
 
-    embeddings = np.load("embed_matrix:0.npy")
+    embeddings = np.load("1900_weights/embed_matrix:0.npy")
     x = np.vstack([embeddings[i] for i in sequence])
     print("embedding shape: ", x.shape)
 
     # x = sliding_window(sequence, size=10)
     params = dict()
-    params["gh"] = np.load("rnn_mlstm_mlstm_gh:0.npy")
-    params["gmh"] = np.load("rnn_mlstm_mlstm_gmh:0.npy")
-    params["gmx"] = np.load("rnn_mlstm_mlstm_gmx:0.npy")
-    params["gx"] = np.load("rnn_mlstm_mlstm_gx:0.npy")
+    params["gh"] = np.load("1900_weights/rnn_mlstm_mlstm_gh:0.npy")
+    params["gmh"] = np.load("1900_weights/rnn_mlstm_mlstm_gmh:0.npy")
+    params["gmx"] = np.load("1900_weights/rnn_mlstm_mlstm_gmx:0.npy")
+    params["gx"] = np.load("1900_weights/rnn_mlstm_mlstm_gx:0.npy")
 
-    params["wh"] = np.load("1900_weights/1900_weights/tm_wh:0.npy")
-    params["wmh"] = np.load("1900_weights/1900_weights/tm_wmh:0.npy")
-    params["wmx"] = np.load("1900_weights/1900_weights/tm_wmx:0.npy")
-    params["wx"] = np.load("1900_weights/1900_weights/tm_wx:0.npy")
+    params["wh"] = np.load("1900_weights/rnn_mlstm_mlstm_wh:0.npy")
+    params["wmh"] = np.load("1900_weights/rnn_mlstm_mlstm_wmh:0.npy")
+    params["wmx"] = np.load("1900_weights/rnn_mlstm_mlstm_wmx:0.npy")
+    params["wx"] = np.load("1900_weights/rnn_mlstm_mlstm_wx:0.npy")
 
-    params["b"] = np.load("1900_weights/1900_weights/tm_b:0.npy")
+    params["b"] = np.load("1900_weights/rnn_mlstm_mlstm_b:0.npy")
 
     # Pass through mLSTM1900
     out = mlstm1900(params, x)

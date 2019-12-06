@@ -30,3 +30,7 @@ def leaky_relu(x, a):
 
 def identity(x):
     return x
+
+
+def softmax(x, axis:int = -1):
+    return np.exp(x)/np.sum(np.exp(x), axis=axis).reshape(-1, 1)
