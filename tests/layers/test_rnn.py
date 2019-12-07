@@ -4,7 +4,7 @@ import numpy.random as npr
 from hypothesis import given, settings
 from hypothesis.strategies import integers
 
-from fundl.layers.rnn import gru, lstm, mlstm1900_batch, mlstm1900_step, mlstm1900
+from fundl.layers.rnn import gru, lstm, mlstm1900, mlstm1900_batch, mlstm1900_step
 from fundl.utils import sliding_window
 from fundl.weights import add_gru_params, add_lstm_params, add_mlstm1900_params
 
