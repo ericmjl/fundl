@@ -17,9 +17,13 @@ def dense(params, x, nonlin=identity):
     Activation defaults to identity,
     but any elementwise numpy function can be applied.
 
+    Shapes of inputs should be:
+
     :param params: A dictionary of weights.
         Should have "w" and "b" as keywords.
-    :param x: Input data.
+        "w" should be of shape (input_dim, output_dim),
+        "b" should be of shape (output_dim,),
+    :param x: Input data, which should be of shape (:, input_dim).
     :param activation: A callable
         that applies an elementwise activation function on the output array.
     """
@@ -38,6 +42,7 @@ def dropout(p, x):
     :param p: Probability of dropout.
         Should be a scalar float between 0 and 1.
     :param x: Outputs from previous layer.
+        Should be of shape (batch_size, dims).
     """
     mask = npr.binomial(n=1, p=p, size=x.shape[1])
     return x * mask
