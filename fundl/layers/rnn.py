@@ -8,7 +8,7 @@ from jax import lax
 from fundl.activations import relu, sigmoid, tanh
 from fundl.utils import l2_normalize, ndims
 
-logging.basicConfig(filename="log.txt", level=logging.INFO, filemode="w")
+logging.basicConfig(filename="/var/fundl.rnn.log.txt", level=logging.INFO, filemode="w")
 
 
 def gru_step(params, h_t: np.array, x_t: np.array):
@@ -22,16 +22,10 @@ def gru_step(params, h_t: np.array, x_t: np.array):
     # Transform x into a row vector with an explicit sample dimension.
     # if ndims(x_t) == 1:
     #     x_t = np.reshape(x_t, newshape=(1, -1))
-    z_t = relu(
-        np.dot(x_t, params["W_z"]) + np.dot(x_t, params["U_z"]) + params["b_z"]
-    )
-    r_t = relu(
-        np.dot(x_t, params["W_r"]) + np.dot(h_t, params["U_r"]) + params["b_r"]
-    )
+    z_t = relu(np.dot(x_t, params["W_z"]) + np.dot(x_t, params["U_z"]) + params["b_z"])
+    r_t = relu(np.dot(x_t, params["W_r"]) + np.dot(h_t, params["U_r"]) + params["b_r"])
     h_t = z_t * h_t + (1 - z_t) * relu(
-        np.dot(x_t, params["W_h"])
-        + np.dot((r_t * h_t), params["U_h"])
-        + params["b_h"]
+        np.dot(x_t, params["W_h"]) + np.dot((r_t * h_t), params["U_h"]) + params["b_h"]
     )
     return h_t, h_t
 
