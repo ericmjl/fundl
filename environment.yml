@@ -18,7 +18,6 @@ dependencies:
 - jaxlib=0.1.28
 - jupyter=1.0.0
 - jupyterlab=1.1.1
-- jupytext=1.3.0
 - mypy=0.720
 - mkl-service=2.3.0
 - networkx=2.3
