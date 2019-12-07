@@ -5,7 +5,6 @@ from itertools import combinations
 
 import networkx as nx
 import numpy as np
-
 from rdkit import Chem
 
 

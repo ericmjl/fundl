@@ -1,5 +1,6 @@
 """Graph node counting task."""
 
+import janitor.chemistry
 import jax.numpy as np
 import networkx as nx
 import numpy as onp
@@ -9,7 +10,6 @@ import pandas as pd
 from jax import grad
 from jax.experimental.optimizers import adam
 
-import janitor.chemistry
 from chemgraph import atom_graph
 from fundl.activations import relu
 from fundl.datasets import make_graph_counting_dataset
