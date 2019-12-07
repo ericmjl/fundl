@@ -8,7 +8,7 @@ from jax import lax
 from fundl.activations import relu, sigmoid, tanh
 from fundl.utils import l2_normalize, ndims
 
-logging.basicConfig(filename="/var/fundl.rnn.log.txt", level=logging.INFO, filemode="w")
+logging.basicConfig(filename="/tmp/fundl.rnn.log.txt", level=logging.INFO, filemode="w")
 
 
 def gru_step(params, h_t: np.array, x_t: np.array):
