@@ -4,7 +4,7 @@ import numpy.random as npr
 from hypothesis import given, settings
 from hypothesis.strategies import integers
 
-from fundl.layers.rnn import gru, lstm, mlstm1900, mlstm1900_step
+from fundl.layers.rnn import gru, lstm, mlstm1900, mlstm1900_batch, mlstm1900_step
 from fundl.utils import sliding_window
 from fundl.weights import add_gru_params, add_lstm_params, add_mlstm1900_params
 
@@ -18,9 +18,7 @@ from fundl.weights import add_gru_params, add_lstm_params, add_mlstm1900_params
 def test_gru(input_dim, output_dim, n_samples):
     """Test for GRU layer."""
     params = dict()
-    params = add_gru_params(
-        params, "gru", input_dim=input_dim, output_dim=output_dim
-    )
+    params = add_gru_params(params, "gru", input_dim=input_dim, output_dim=output_dim)
     x = npr.normal(size=(n_samples, input_dim))
     y = npr.normal(size=(n_samples, output_dim))
 
@@ -66,7 +64,7 @@ def test_mlstm1900_step():
     assert c_t.shape == (1, 1900)
 
 
-def test_mlstm1900():
+def test_mlstm1900_batch():
     """
     Given one fake sequence of window size 10 and k (tbd) sliding windows,
     ensure that we get out _an_ output from mLSTM1900.
@@ -80,5 +78,23 @@ def test_mlstm1900():
         params, name="mlstm1900", input_dim=10, output_dim=1900
     )
 
-    out = mlstm1900(params["mlstm1900"], x)
+    out = mlstm1900_batch(params["mlstm1900"], x)
     assert out.shape == (x.shape[0], 1900)
+
+
+def test_mlstm1900():
+    """
+    Given multiple fake sequences of window size 10 and k sliding windows,
+    ensure that we get a correctly-shaped output from mLSTM1900.
+    """
+    n_samples = 11
+    x_full_length = npr.randint(0, 20, size=(n_samples, 300))
+    x = sliding_window(x_full_length, size=10, axis=-1)
+
+    params = dict()
+    params = add_mlstm1900_params(
+        params, name="mlstm1900", input_dim=10, output_dim=1900
+    )
+
+    out = mlstm1900(params["mlstm1900"], x)
+    assert out.shape == (n_samples, x.shape[1], 1900)

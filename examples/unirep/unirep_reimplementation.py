@@ -2,7 +2,7 @@ from time import time
 
 import jax.numpy as np
 
-from fundl.layers.rnn import mlstm1900
+from fundl.layers.rnn import mlstm1900_batch
 from fundl.utils import sliding_window
 
 start = time()
@@ -46,6 +46,9 @@ def aa_seq_to_int(s):
     return [24] + [aa_to_int[a] for a in s] + [25]
 
 
+one_hots = np.eye(26)
+
+
 def run_mlstm1900_example():
     # Set up an example
     sequence = "MRKGEELFTGVVPILVELDGDVNGHKFSVRGEGEGDATNGKLTLKFICTTGKLPVPWPTLVTTLTYGVQCFARYPDHMKQHDFFKSAMPEGYVQERTISFKDDGTYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNFNSHNVYITADKQKNGIKANFKIRHNVEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSVLSKDPNEKRDHMVLLEFVTAAGITHGMDELYK"
@@ -72,7 +75,7 @@ def run_mlstm1900_example():
     params["b"] = np.load("1900_weights/rnn_mlstm_mlstm_b:0.npy")
 
     # Pass through mLSTM1900
-    out = mlstm1900(params, x)
+    out = mlstm1900_batch(params, x)
     print("output: ", out)
     print("reps: ", out.mean(axis=0))
     print("output shape: ", out.shape)
