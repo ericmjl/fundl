@@ -2,51 +2,28 @@ from time import time
 
 import jax.numpy as np
 
-from fundl.layers.rnn import mlstm1900_batch
+from fundl.layers.rnn import mlstm1900_batch, mlstm1900
 from fundl.utils import sliding_window
+from featurization import aa_seq_to_int
 
 start = time()
 
-aa_to_int = {
-    "M": 1,
-    "R": 2,
-    "H": 3,
-    "K": 4,
-    "D": 5,
-    "E": 6,
-    "S": 7,
-    "T": 8,
-    "N": 9,
-    "Q": 10,
-    "C": 11,
-    "U": 12,
-    "G": 13,
-    "P": 14,
-    "A": 15,
-    "V": 16,
-    "I": 17,
-    "F": 18,
-    "Y": 19,
-    "W": 20,
-    "L": 21,
-    "O": 22,  # Pyrrolysine
-    "X": 23,  # Unknown
-    "Z": 23,  # Glutamic acid or GLutamine
-    "B": 23,  # Asparagine or aspartic acid
-    "J": 23,  # Leucine or isoleucine
-    "start": 24,
-    "stop": 25,
-}
+def load_params():
 
+    params = dict()
+    params["gh"] = np.load("1900_weights/rnn_mlstm_mlstm_gh:0.npy")
+    params["gmh"] = np.load("1900_weights/rnn_mlstm_mlstm_gmh:0.npy")
+    params["gmx"] = np.load("1900_weights/rnn_mlstm_mlstm_gmx:0.npy")
+    params["gx"] = np.load("1900_weights/rnn_mlstm_mlstm_gx:0.npy")
 
-def aa_seq_to_int(s):
-    """
-    Return the int sequence as a list for a given string of amino acids
-    """
-    return [24] + [aa_to_int[a] for a in s] + [25]
+    params["wh"] = np.load("1900_weights/rnn_mlstm_mlstm_wh:0.npy")
+    params["wmh"] = np.load("1900_weights/rnn_mlstm_mlstm_wmh:0.npy")
+    params["wmx"] = np.load("1900_weights/rnn_mlstm_mlstm_wmx:0.npy")
+    params["wx"] = np.load("1900_weights/rnn_mlstm_mlstm_wx:0.npy")
 
+    params["b"] = np.load("1900_weights/rnn_mlstm_mlstm_b:0.npy")
 
-one_hots = np.eye(26)
+    return params
 
 
 def run_mlstm1900_example():
@@ -61,19 +38,7 @@ def run_mlstm1900_example():
     print("embedding shape: ", x.shape)
 
     # x = sliding_window(sequence, size=10)
-    params = dict()
-    params["gh"] = np.load("1900_weights/rnn_mlstm_mlstm_gh:0.npy")
-    params["gmh"] = np.load("1900_weights/rnn_mlstm_mlstm_gmh:0.npy")
-    params["gmx"] = np.load("1900_weights/rnn_mlstm_mlstm_gmx:0.npy")
-    params["gx"] = np.load("1900_weights/rnn_mlstm_mlstm_gx:0.npy")
-
-    params["wh"] = np.load("1900_weights/rnn_mlstm_mlstm_wh:0.npy")
-    params["wmh"] = np.load("1900_weights/rnn_mlstm_mlstm_wmh:0.npy")
-    params["wmx"] = np.load("1900_weights/rnn_mlstm_mlstm_wmx:0.npy")
-    params["wx"] = np.load("1900_weights/rnn_mlstm_mlstm_wx:0.npy")
-
-    params["b"] = np.load("1900_weights/rnn_mlstm_mlstm_b:0.npy")
-
+    params = load_params()
     # Pass through mLSTM1900
     out = mlstm1900_batch(params, x)
     print("output: ", out)
@@ -85,3 +50,19 @@ def run_mlstm1900_example():
 
 run_mlstm1900_example()
 print(f"Time taken: {time() - start:.2f} seconds")
+
+
+
+from featurization import get_embeddings 
+
+def run_mlstm1900_multiple_sequences():
+    sequences = ["MKLVNTIAJ", "MKLVNTIAJ", "MKLVNTIAJ", "MKLVNTIAJ", "MKLVNTIAJ"]
+
+    params = load_params()
+    x = get_embeddings(sequences)
+    out = mlstm1900(x, params)
+
+    print(out.shape)
+
+
+run_mlstm1900_multiple_sequences()
