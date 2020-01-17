@@ -17,7 +17,16 @@ def mlstm1900(params: dict, x: np.ndarray) -> np.ndarray:
     :param x: Input tensor,
         which should be of shape (n_samples, n_windows, n_features).
     """
-    return vmap(mlstm1900_batch, in_axes=(None, 0), out_axes=0)(params, x)
+    # Wrap mapfunc to only take one argument,
+    # so that we can vmap it properly.
+    # functools partial doesn't work very well
+    # with our design that puts params in the first kwarg position,
+    # because vmap will then try to pass x to the first positional argument.
+    # Explicit wrapping might be the better way to approach this.
+    def mlstm1900_vmappable(x):
+        return mlstm1900_batch(params=params, batch=x)
+
+    return vmap(mlstm1900_vmappable)(x)
 
 
 def mlstm1900_batch(params: dict, batch: np.ndarray) -> np.ndarray:

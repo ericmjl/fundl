@@ -4,13 +4,6 @@ from hypothesis import strategies as st
 
 from featurization import SequenceLengthsError, get_embeddings
 
-# @st.composite
-# def list_of_sequences(draw):
-#     length = draw(st.integers(min_value=0, max_value=10))
-#     sequences = draw(
-#         st.lists(elements=st.text(alphabet="MRHKDESTNQCUGPAVIFYWLOXZBJ", length=length))
-#         )
-#     return sequences, length
 
 # We need to generate lists of strings that are of identical length.
 # The strings can be of variable letters, but they must be drawn from the a.a. alphabet.

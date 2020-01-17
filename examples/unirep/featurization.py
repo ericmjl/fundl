@@ -1,4 +1,5 @@
 from collections import Counter
+from pathlib import Path
 from typing import List
 
 import numpy as np
@@ -82,7 +83,9 @@ Sequence length: number of sequences information in the dictionary below.
 {seq_lengths}
 """
         raise SequenceLengthsError(error)
-    embeddings = np.load("1900_weights/embed_matrix:0.npy")
+    embeddings = np.load(
+        Path(__file__).resolve().parent / "1900_weights/embed_matrix:0.npy"
+    )
 
     seq_embeddings = [get_embedding(s, embeddings) for s in sequences]
     return np.stack(seq_embeddings, axis=0)

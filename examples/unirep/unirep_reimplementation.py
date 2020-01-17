@@ -5,26 +5,9 @@ import jax.numpy as np
 from featurization import aa_seq_to_int, get_embeddings
 from fundl.layers.rnn import mlstm1900, mlstm1900_batch
 from fundl.utils import sliding_window
+from utils import load_params
 
 start = time()
-
-
-def load_params():
-
-    params = dict()
-    params["gh"] = np.load("1900_weights/rnn_mlstm_mlstm_gh:0.npy")
-    params["gmh"] = np.load("1900_weights/rnn_mlstm_mlstm_gmh:0.npy")
-    params["gmx"] = np.load("1900_weights/rnn_mlstm_mlstm_gmx:0.npy")
-    params["gx"] = np.load("1900_weights/rnn_mlstm_mlstm_gx:0.npy")
-
-    params["wh"] = np.load("1900_weights/rnn_mlstm_mlstm_wh:0.npy")
-    params["wmh"] = np.load("1900_weights/rnn_mlstm_mlstm_wmh:0.npy")
-    params["wmx"] = np.load("1900_weights/rnn_mlstm_mlstm_wmx:0.npy")
-    params["wx"] = np.load("1900_weights/rnn_mlstm_mlstm_wx:0.npy")
-
-    params["b"] = np.load("1900_weights/rnn_mlstm_mlstm_b:0.npy")
-
-    return params
 
 
 def run_mlstm1900_example():
@@ -53,6 +36,9 @@ run_mlstm1900_example()
 print(f"Time taken: {time() - start:.2f} seconds")
 
 
+start = time()
+
+
 def run_mlstm1900_multiple_sequences():
     sequences = [
         "MKLVNTIAJ",
@@ -64,9 +50,10 @@ def run_mlstm1900_multiple_sequences():
 
     params = load_params()
     x = get_embeddings(sequences)
-    out = mlstm1900(x, params)
+    out = mlstm1900(params, x)
 
     print(out.shape)
 
 
 run_mlstm1900_multiple_sequences()
+print(f"Time taken: {time() - start:.2f} seconds")
