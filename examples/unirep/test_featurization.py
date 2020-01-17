@@ -1,6 +1,8 @@
 import pytest
-from hypothesis import given, strategies as st
-from featurization import get_embeddings, SequenceLengthsError 
+from hypothesis import given
+from hypothesis import strategies as st
+
+from featurization import SequenceLengthsError, get_embeddings
 
 # @st.composite
 # def list_of_sequences(draw):
@@ -16,12 +18,7 @@ from featurization import get_embeddings, SequenceLengthsError
 @given(st.data())
 def test_get_embeddings(data):
 
-    length = data.draw(
-        st.integers(
-            min_value=1, 
-            max_value=10,
-        )
-    )
+    length = data.draw(st.integers(min_value=1, max_value=10))
     sequences = data.draw(
         st.lists(
             elements=st.text(

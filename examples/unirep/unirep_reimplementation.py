@@ -2,11 +2,12 @@ from time import time
 
 import jax.numpy as np
 
-from fundl.layers.rnn import mlstm1900_batch, mlstm1900
+from featurization import aa_seq_to_int, get_embeddings
+from fundl.layers.rnn import mlstm1900, mlstm1900_batch
 from fundl.utils import sliding_window
-from featurization import aa_seq_to_int
 
 start = time()
+
 
 def load_params():
 
@@ -52,11 +53,14 @@ run_mlstm1900_example()
 print(f"Time taken: {time() - start:.2f} seconds")
 
 
-
-from featurization import get_embeddings 
-
 def run_mlstm1900_multiple_sequences():
-    sequences = ["MKLVNTIAJ", "MKLVNTIAJ", "MKLVNTIAJ", "MKLVNTIAJ", "MKLVNTIAJ"]
+    sequences = [
+        "MKLVNTIAJ",
+        "MKLVNTIAJ",
+        "MKLVNTIAJ",
+        "MKLVNTIAJ",
+        "MKLVNTIAJ",
+    ]
 
     params = load_params()
     x = get_embeddings(sequences)

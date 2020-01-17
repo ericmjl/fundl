@@ -4,7 +4,13 @@ import numpy.random as npr
 from hypothesis import given, settings
 from hypothesis.strategies import integers
 
-from fundl.layers.rnn import gru, lstm, mlstm1900, mlstm1900_batch, mlstm1900_step
+from fundl.layers.rnn import (
+    gru,
+    lstm,
+    mlstm1900,
+    mlstm1900_batch,
+    mlstm1900_step,
+)
 from fundl.utils import sliding_window
 from fundl.weights import add_gru_params, add_lstm_params, add_mlstm1900_params
 
@@ -18,7 +24,9 @@ from fundl.weights import add_gru_params, add_lstm_params, add_mlstm1900_params
 def test_gru(input_dim, output_dim, n_samples):
     """Test for GRU layer."""
     params = dict()
-    params = add_gru_params(params, "gru", input_dim=input_dim, output_dim=output_dim)
+    params = add_gru_params(
+        params, "gru", input_dim=input_dim, output_dim=output_dim
+    )
     x = npr.normal(size=(n_samples, input_dim))
     y = npr.normal(size=(n_samples, output_dim))
 

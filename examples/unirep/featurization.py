@@ -1,4 +1,6 @@
+from collections import Counter
 from typing import List
+
 import numpy as np
 import pytest
 
@@ -33,6 +35,7 @@ aa_to_int = {
     "stop": 25,
 }
 
+
 def aa_seq_to_int(s):
     """
     Return the int sequence as a list for a given string of amino acids
@@ -42,6 +45,7 @@ def aa_seq_to_int(s):
 
 class SequenceLengthsError(Exception):
     """Use this when checking that all lengths of sequences are the same"""
+
     pass
 
 
@@ -53,9 +57,8 @@ def get_embedding(sequence: str, embeddings: np.ndarray) -> np.ndarray:
     x = np.vstack([embeddings[i] for i in sequence])
     return x
 
-from collections import Counter
 
-def get_embeddings(sequences: List[str]) -> np.ndarray :
+def get_embeddings(sequences: List[str]) -> np.ndarray:
     """
     This function takes a list of protein sequences as strings,
     all sequences being of the same length,
@@ -83,9 +86,3 @@ Sequence length: number of sequences information in the dictionary below.
 
     seq_embeddings = [get_embedding(s, embeddings) for s in sequences]
     return np.stack(seq_embeddings, axis=0)
-
-
-
-
-
-
