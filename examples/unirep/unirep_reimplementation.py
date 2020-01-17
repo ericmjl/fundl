@@ -24,12 +24,11 @@ def run_mlstm1900_example():
     # x = sliding_window(sequence, size=10)
     params = load_params()
     # Pass through mLSTM1900
-    out = mlstm1900_batch(params, x)
+    h_final, c_final, out = mlstm1900_batch(params, x)
     print("output: ", out)
     print("reps: ", out.mean(axis=0))
     print("output shape: ", out.shape)
     assert out.shape == (x.shape[0], 1900)
-    # Check outputs
 
 
 run_mlstm1900_example()
@@ -41,18 +40,20 @@ start = time()
 
 def run_mlstm1900_multiple_sequences():
     sequences = [
-        "MKLVNTIAJ",
-        "MKLVNTIAJ",
-        "MKLVNTIAJ",
-        "MKLVNTIAJ",
-        "MKLVNTIAJ",
+        "MKLVTITJ",
+        "MKLVDIAJ",
+        "MKLVTIAJ",
+        "MKLRKIAJ",
+        "MKLVTIMJ",
     ]
 
     params = load_params()
     x = get_embeddings(sequences)
-    out = mlstm1900(params, x)
+    h_final, c_final, out = mlstm1900(params, x)
 
     print(out.shape)
+    print(h_final.shape)
+    print(c_final.shape)
 
 
 run_mlstm1900_multiple_sequences()

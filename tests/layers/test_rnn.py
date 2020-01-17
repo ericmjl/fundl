@@ -86,7 +86,7 @@ def test_mlstm1900_batch():
         params, name="mlstm1900", input_dim=10, output_dim=1900
     )
 
-    out = mlstm1900_batch(params["mlstm1900"], x)
+    h_final, c_final, out = mlstm1900_batch(params["mlstm1900"], x)
     assert out.shape == (x.shape[0], 1900)
 
 
