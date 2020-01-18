@@ -11,7 +11,7 @@ params = load_params()
 
 
 @given(st.data())
-@settings(deadline=None)
+@settings(deadline=None, max_examples=20)
 def test_mlstm1900(data):
     length = data.draw(st.integers(min_value=1, max_value=10))
     sequences = data.draw(

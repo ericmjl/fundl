@@ -104,5 +104,5 @@ def test_mlstm1900():
         params, name="mlstm1900", input_dim=10, output_dim=1900
     )
 
-    out = mlstm1900(params["mlstm1900"], x)
+    h_final, c_final, out = mlstm1900(params["mlstm1900"], x)
     assert out.shape == (n_samples, x.shape[1], 1900)
